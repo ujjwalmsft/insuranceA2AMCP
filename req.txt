@@ -1,4 +1,4 @@
-# Insurance Claims Processing System - Complete Dependencies
+# Insurance Claims Processing based on multi agent system - Complete Dependencies
 # All dependencies used across the entire project (agents + MCP server + dashboard)
 # No version constraints - allows pip to install latest compatible versions
 

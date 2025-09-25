@@ -1,4 +1,4 @@
-# Insurance Claims Processing System - Complete Dependencies with Versions
+# Insurance Claims Processing based on multi agent system - Complete Dependencies with Versions
 # All dependencies used across the entire project with specific version constraints
 # Consolidated from all project components for consistent deployment
 

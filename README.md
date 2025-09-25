@@ -1,22 +1,17 @@
-# 🏥 AI-Powered Insurance Claims Processing System
+# 🏥 AI powered insurance claims processing with multi agents and realtime audio with voice live API
 
-A modern, intelligent insurance claims processing platform built with **Azure AI Foundry**, **Agent-to-Agent (A2A) Protocol**, and **Model Context Protocol (MCP)** for automated claim validation, document processing, and coverage evaluation.
-
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.11+-green.svg)
-![Azure](https://img.shields.io/badge/azure-ai%20foundry-blue.svg)
-![Status](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)
+A modern, intelligent insurance claims processing platform built with **Azure AI Foundry**, **Agent-to-Agent (A2A) Protocol**, and **Model Context Protocol (MCP)** for automated claims validation, document processing, and coverage evaluation. 
 
 ## 🚀 Overview
 
 This system revolutionizes insurance claims processing through **intelligent agent orchestration**, providing:
 
-- **🎤 Real-time Voice Interface** for customer claim submissions
-- **🤖 AI-Powered Agent Orchestration** with dynamic routing
-- **📄 Automated Document Intelligence** for claim validation
+- **🎤 Real time Voice Interface** for customer claim status queries
+- **🤖 AI Powered multi agent orchestration** with dynamic routing
+- **📄 Document Intelligence** for claim validation
 - **🛡️ Smart Coverage Rules Engine** for policy evaluation
 - **📱 Professional Dashboard** for claims processing employees
-- **📧 Automated Notifications** via email/SMS
+- **📧 Automated Notifications** via email
 
 ## ✨ Key Features
 
@@ -33,11 +28,6 @@ This system revolutionizes insurance claims processing through **intelligent age
 - **WebSocket**: Real-time voice and chat communications
 - **RESTful APIs**: Dashboard and external system integrations
 
-### 📊 **Real-time Monitoring**
-- Live workflow tracking with step-by-step visibility
-- Agent health monitoring and capability discovery
-- Performance metrics and execution history
-- Professional employee dashboard with claims management
 
 ## 🏗️ Current Architecture
 
@@ -87,7 +77,7 @@ graph TB
 ### 1. Environment Setup
 ```bash
 # Clone the repository
-git clone https://github.com/devusermeta/insurance_test.git
+git clone https://github.com/ujjwalmsft/insuranceA2AMCP.git
 cd insurance_test
 
 # Navigate to agents directory and activate virtual environment
