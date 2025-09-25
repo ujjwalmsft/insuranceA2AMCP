@@ -1,4 +1,4 @@
-# 🏥 AI powered insurance claims processing with multi agents and realtime audio with voice live API
+# 🏥 AI powered insurance claims processing with multiple agents, realtime audio and voice live API
 
 A modern, intelligent insurance claims processing platform built with **Azure AI Foundry**, **Agent-to-Agent (A2A) Protocol**, and **Model Context Protocol (MCP)** for automated claims validation, document processing, and coverage evaluation. 
 
