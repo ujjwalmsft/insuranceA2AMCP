@@ -1,0 +1,85 @@
+[
+    {
+        "id": "IP-01",
+        "claimId": "IP-01",
+        "patientName": "John Smith",
+        "category": "Inpatient",
+        "diagnosis": "general surgery",
+        "billAmount": 15000.00,
+        "status": "submitted",
+        "submittedDate": "2024-09-01",
+        "provider": "City General Hospital",
+        "policyNumber": "POL123456",
+        "documents": {
+            "bills": "bill_IP-01.pdf",
+            "memo": "memo_IP-01.pdf",
+            "dischargeSummary": "discharge_IP-01.pdf"
+        }
+    },
+    {
+        "id": "IP-02",
+        "claimId": "IP-02",
+        "patientName": "Jane Doe",
+        "category": "Inpatient",
+        "diagnosis": "cardiac surgery",
+        "billAmount": 85000.00,
+        "status": "submitted",
+        "submittedDate": "2024-09-02",
+        "provider": "Heart Specialty Center",
+        "policyNumber": "POL789012",
+        "documents": {
+            "bills": "bill_IP-02.pdf",
+            "memo": "memo_IP-02.pdf",
+            "dischargeSummary": "discharge_IP-02.pdf"
+        }
+    },
+    {
+        "id": "IP-03",
+        "claimId": "IP-03", 
+        "patientName": "Alice Johnson",
+        "category": "Inpatient",
+        "diagnosis": "community-acquired pneumonia",
+        "billAmount": 928.00,
+        "status": "submitted",
+        "submittedDate": "2024-09-03",
+        "provider": "Mercy Medical Center",
+        "policyNumber": "POL345678",
+        "documents": {
+            "bills": "bill_IP-03.pdf",
+            "memo": "memo_IP-03.pdf",
+            "dischargeSummary": "discharge_IP-03.pdf"
+        }
+    },
+    {
+        "id": "OP-01",
+        "claimId": "OP-01",
+        "patientName": "Bob Wilson",
+        "category": "Outpatient", 
+        "diagnosis": "eye examination",
+        "billAmount": 750.00,
+        "status": "submitted",
+        "submittedDate": "2024-09-04",
+        "provider": "Vision Care Clinic",
+        "policyNumber": "POL901234",
+        "documents": {
+            "bills": "bill_OP-01.pdf",
+            "memo": "memo_OP-01.pdf"
+        }
+    },
+    {
+        "id": "OP-02",
+        "claimId": "OP-02",
+        "patientName": "Carol Martinez",
+        "category": "Outpatient",
+        "diagnosis": "dental cleaning",
+        "billAmount": 1200.00,
+        "status": "submitted", 
+        "submittedDate": "2024-09-05",
+        "provider": "Bright Smile Dental",
+        "policyNumber": "POL567890",
+        "documents": {
+            "bills": "bill_OP-02.pdf",
+            "memo": "memo_OP-02.pdf"
+        }
+    }
+]

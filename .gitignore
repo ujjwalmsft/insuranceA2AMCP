@@ -1,0 +1,44 @@
+# Python
+.venv
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# Agent Registry
+.agentregistry
+
+insurance_setup.md
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+config.js
+config_vla.js
+
+# Insurance Agents specific
+insurance_agents/**/*.log
+insurance_agents/**/logs/
+insurance_agents/**/.cache/
+insurance_agents/**/temp/
+
+# Cosmos DB local data
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

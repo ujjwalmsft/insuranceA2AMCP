@@ -1,0 +1,20 @@
+{
+    "id": "OP-05",
+    "claimId": "OP-05",
+    "extractedAt": "2025-09-23T22:51:22.558819+00:00",
+    "extractionSource": "Azure Document Intelligence",
+    "medical_bill_doc": {
+        "patient_name": "John Doe",
+        "bill_date": "2025-07-15",
+        "bill_amount": 88
+    },
+    "memo_doc": {
+        "patient_name": "John Doe",
+        "medical_condition": "Type 2 diabetes"
+    },
+    "_rid": "R8FHAKo2OTMhAAAAAAAAAA==",
+    "_self": "dbs/R8FHAA==/colls/R8FHAKo2OTM=/docs/R8FHAKo2OTMhAAAAAAAAAA==/",
+    "_etag": "\"3401860e-0000-0200-0000-68d2d7130000\"",
+    "_attachments": "attachments/",
+    "_ts": 1758648083
+}

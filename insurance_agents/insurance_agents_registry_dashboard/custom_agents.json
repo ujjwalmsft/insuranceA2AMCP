@@ -1,0 +1,51 @@
+{
+  "communication": {
+    "agentId": "communication",
+    "url": "http://localhost:8005",
+    "custom_name": "Communication",
+    "agent_card": {
+      "capabilities": {
+        "streaming": false
+      },
+      "defaultInputModes": [
+        "text"
+      ],
+      "defaultOutputModes": [
+        "text"
+      ],
+      "description": "Sends email notifications for insurance claim decisions using Azure Communication Services",
+      "name": "CommunicationAgent",
+      "preferredTransport": "JSONRPC",
+      "protocolVersion": "0.3.0",
+      "skills": [
+        {
+          "description": "Send email notification about insurance claim decisions using Azure Communication Services",
+          "id": "send_claim_notification",
+          "name": "Send Claim Notification",
+          "tags": [
+            "email",
+            "notification",
+            "communication",
+            "claims"
+          ]
+        },
+        {
+          "description": "Check if email service is available and configured properly",
+          "id": "health_check",
+          "name": "Email Service Health Check",
+          "tags": [
+            "health",
+            "status",
+            "email",
+            "service"
+          ]
+        }
+      ],
+      "url": "http://localhost:8005",
+      "version": "1.0.0",
+      "custom_agent": true
+    },
+    "added_timestamp": "2025-09-13T17:44:28.431801",
+    "type": "custom"
+  }
+}

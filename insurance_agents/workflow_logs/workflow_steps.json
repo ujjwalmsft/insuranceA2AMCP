@@ -1,0 +1,406 @@
+{
+  "CLAIM_20250909_134318": [
+    {
+      "step_id": "step_01",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "agent_selection",
+      "title": "🎯 Agent Selection - Intelligent_Routing",
+      "description": "Selected Azure AI GPT-4o for intelligent_routing",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:43:18.921414",
+      "agent_name": "azure_ai_foundry",
+      "agent_reasoning": "Outpatient claim with no documents, amount: $250.0",
+      "details": {
+        "task_type": "intelligent_routing",
+        "selected_agent": "azure_ai_foundry",
+        "alternatives_considered": []
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_02",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to intake_clarifier",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:43:21.858099",
+      "agent_name": "intake_clarifier",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Fraud detection and validation",
+        "agent_url": "http://localhost:8002"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_03",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - intake_clarifier",
+      "description": "Successfully completed claim_intake",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:43:24.912485",
+      "agent_name": "intake_clarifier",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our intake_clarifier specialist and here's what they found:\n\n{'id': 'a2a-intake_clarifier-58843dc6-0e83-45e4-a361-f7009a28e170', 'jsonrpc': '2.0', 'result': {'artifacts': [{'artifactId': 'aa3c4149-7691-45de-b6bc-bcd1cec10d46', 'description': 'Result of intake clarification process.', 'name': 'intake_clarification_result', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"message\": \"Processed task: general_clarification\",\\n  \"task\": \"general_clarification\",\\n  \"parameters\": {\\n    \"user_request\": \"Task: claim_intake: {\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 250.0, \\\\\"description\\\\\": \\\\\"Integration test claim\\\\\", \\\\\"customer_id\\\\\": \\\\\"test_customer\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_TEST_001\\\\\"}}. Parameters: {\\\\\"action\\\\\": \\\\\"claim_intake\\\\\", \\\\\"query\\\\\": \\\\\"{\\\\\\\\\\\\\"action\\\\\\\\\\\\\": \\\\\\\\\\\\\"process_claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_data\\\\\\\\\\\\\": {\\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"type\\\\\\\\\\\\\": \\\\\\\\\\\\\"outpatient\\\\\\\\\\\\\", \\\\\\\\\\\\\"amount\\\\\\\\\\\\\": 250.0, \\\\\\\\\\\\\"description\\\\\\\\\\\\\": \\\\\\\\\\\\\"Integration test claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"customer_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"test_customer\\\\\\\\\\\\\", \\\\\\\\\\\\\"policy_number\\\\\\\\\\\\\": \\\\\\\\\\\\\"POL_TEST_001\\\\\\\\\\\\\"}}\\\\\", \\\\\"session_id\\\\\": \\\\\"457110a7-45bc-45e7-bba7-a945864cbe5a\\\\\", \\\\\"context\\\\\": \\\\\"Request from intelligent orchestrator: {\\\\\\\\\\\\\"action\\\\\\\\\\\\\": \\\\\\\\\\\\\"process_claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_data\\\\\\\\\\\\\": {\\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"type\\\\\\\\\\\\\": \\\\\\\\\\\\\"outpatient\\\\\\\\\\\\\", \\\\\\\\\\\\\"amount\\\\\\\\\\\\\": 250.0, \\\\\\\\\\\\\"description\\\\\\\\\\\\\": \\\\\\\\\\\\\"Integration test claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"customer_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"test_customer\\\\\\\\\\\\\", \\\\\\\\\\\\\"policy_number\\\\\\\\\\\\\": \\\\\\\\\\\\\"POL_TEST_001\\\\\\\\\\\\\"}}\\\\\"}\",\\n    \"expected_output\": \"clarification_response\"\\n  },\\n  \"agent\": \"intake_clarifier\",\\n  \"specialties\": [\\n    \"Claims validation and clarification\",\\n    \"Fraud risk assessment\",\\n    \"Customer information verification\",\\n    \"Document completeness checking\"\\n  ]\\n}'}]}], 'contextId': '3a87dfb7-956c-4cc4-91b6-94725e82b423', 'history': [{'contextId': '3a87dfb7-956c-4cc4-91b6-94725e82b423', 'kind': 'message', 'messageId': 'msg-54aa857d-4edf-45b4-a6a5-aceccaa62c38', 'parts': [{'kind': 'text', 'text': 'Task: claim_intake: {\"action\": \"process_claim\", \"claim_id\": \"TEST-INTEGRATION-001\", \"claim_data\": {\"claim_id\": \"TEST-INTEGRATION-001\", \"type\": \"outpatient\", \"amount\": 250.0, \"description\": \"Integration test claim\", \"customer_id\": \"test_customer\", \"policy_number\": \"POL_TEST_001\"}}. Parameters: {\"action\": \"claim_intake\", \"query\": \"{\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 250.0, \\\\\"description\\\\\": \\\\\"Integration test claim\\\\\", \\\\\"customer_id\\\\\": \\\\\"test_customer\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_TEST_001\\\\\"}}\", \"session_id\": \"457110a7-45bc-45e7-bba7-a945864cbe5a\", \"context\": \"Request from intelligent orchestrator: {\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 250.0, \\\\\"description\\\\\": \\\\\"Integration test claim\\\\\", \\\\\"customer_id\\\\\": \\\\\"test_customer\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_TEST_001\\\\\"}}\"}'}], 'role': 'user', 'taskId': 'ec93e3a5-d02c-41cb-acdf-0f322859d402'}, {'contextId': '3a87dfb7-956c-4cc4-91b6-94725e82b423', 'kind': 'message', 'messageId': '8b1f7957-8bf1-417c-b831-86f2f8abb7b8', 'parts': [{'kind': 'text', 'text': '🏥 Starting claim intake clarification...'}], 'role': 'agent', 'taskId': 'ec93e3a5-d02c-41cb-acdf-0f322859d402'}], 'id': 'ec93e3a5-d02c-41cb-acdf-0f322859d402', 'kind': 'task', 'status': {'state': 'completed'}}}",
+          "agent_used": "intake_clarifier",
+          "task_type": "claim_intake",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"TEST-INTEGRATION-001\", \"claim_data\": {\"claim_id\": \"TEST-INTEGRATION-001\", \"type\": \"outpatient\", \"amount\": 250.0, \"description\": \"Integration test claim\", \"customer_id\": \"test_customer\", \"policy_number\": \"POL_TEST_001\"}}",
+          "timestamp": "2025-09-09T13:43:24.912375"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_04",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "agent_selection",
+      "title": "⏩ Skipped document_intelligence",
+      "description": "Azure AI determined document_intelligence is not needed: No documents to analyze",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:43:27.712721",
+      "agent_name": "document_intelligence",
+      "agent_reasoning": "No documents to analyze",
+      "details": {},
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_05",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to coverage_rules_engine",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:43:30.624672",
+      "agent_name": "coverage_rules_engine",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Policy compliance and final decision",
+        "agent_url": "http://localhost:8004"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_06",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - coverage_rules_engine",
+      "description": "Successfully completed coverage_evaluation",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:43:33.632011",
+      "agent_name": "coverage_rules_engine",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our coverage_rules_engine specialist and here's what they found:\n\n{'id': 'a2a-coverage_rules_engine-12b470c8-f47c-4a78-9ec1-f8894955067f', 'jsonrpc': '2.0', 'result': {'kind': 'message', 'messageId': 'a86869fc-bb45-4cad-a598-344365025dc8', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"message\": \"Coverage evaluation completed: General coverage evaluation\",\\n  \"eligibility\": \"approved\",\\n  \"covered_amount\": 350.0,\\n  \"coverage_percentage\": 41.18,\\n  \"deductible\": 500\\n}'}], 'role': 'agent', 'taskId': 'db8a0fd5-82a7-47ad-85ed-2f17b6c40623'}}",
+          "agent_used": "coverage_rules_engine",
+          "task_type": "coverage_evaluation",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"TEST-INTEGRATION-001\", \"claim_data\": {\"claim_id\": \"TEST-INTEGRATION-001\", \"type\": \"outpatient\", \"amount\": 250.0, \"description\": \"Integration test claim\", \"customer_id\": \"test_customer\", \"policy_number\": \"POL_TEST_001\"}}",
+          "timestamp": "2025-09-09T13:43:33.631957"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_07",
+      "claim_id": "CLAIM_20250909_134318",
+      "step_type": "completion",
+      "title": "🎉 Processing Complete",
+      "description": "Claim CLAIM_20250909_134318 processed successfully",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:43:36.358607",
+      "agent_name": null,
+      "agent_reasoning": null,
+      "details": {
+        "final_status": "completed",
+        "total_processing_time_ms": 1000
+      },
+      "duration_ms": null
+    }
+  ],
+  "CLAIM_20250909_134548": [
+    {
+      "step_id": "step_01",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "agent_selection",
+      "title": "🎯 Agent Selection - Intelligent_Routing",
+      "description": "Selected Azure AI GPT-4o for intelligent_routing",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:45:48.616148",
+      "agent_name": "azure_ai_foundry",
+      "agent_reasoning": "Outpatient claim with no documents, amount: $250.0",
+      "details": {
+        "task_type": "intelligent_routing",
+        "selected_agent": "azure_ai_foundry",
+        "alternatives_considered": []
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_02",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to intake_clarifier",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:45:51.578736",
+      "agent_name": "intake_clarifier",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Fraud detection and validation",
+        "agent_url": "http://localhost:8002"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_03",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - intake_clarifier",
+      "description": "Successfully completed claim_intake",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:45:54.613063",
+      "agent_name": "intake_clarifier",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our intake_clarifier specialist and here's what they found:\n\n{'id': 'a2a-intake_clarifier-60f0fcfc-f27c-4cae-9675-e002f77a9698', 'jsonrpc': '2.0', 'result': {'artifacts': [{'artifactId': '780e174a-9704-4651-b7e2-5158427018c0', 'description': 'Result of intake clarification process.', 'name': 'intake_clarification_result', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"message\": \"Processed task: general_clarification\",\\n  \"task\": \"general_clarification\",\\n  \"parameters\": {\\n    \"user_request\": \"Task: claim_intake: {\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 250.0, \\\\\"description\\\\\": \\\\\"Integration test claim\\\\\", \\\\\"customer_id\\\\\": \\\\\"test_customer\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_TEST_001\\\\\"}}. Parameters: {\\\\\"action\\\\\": \\\\\"claim_intake\\\\\", \\\\\"query\\\\\": \\\\\"{\\\\\\\\\\\\\"action\\\\\\\\\\\\\": \\\\\\\\\\\\\"process_claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_data\\\\\\\\\\\\\": {\\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"type\\\\\\\\\\\\\": \\\\\\\\\\\\\"outpatient\\\\\\\\\\\\\", \\\\\\\\\\\\\"amount\\\\\\\\\\\\\": 250.0, \\\\\\\\\\\\\"description\\\\\\\\\\\\\": \\\\\\\\\\\\\"Integration test claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"customer_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"test_customer\\\\\\\\\\\\\", \\\\\\\\\\\\\"policy_number\\\\\\\\\\\\\": \\\\\\\\\\\\\"POL_TEST_001\\\\\\\\\\\\\"}}\\\\\", \\\\\"session_id\\\\\": \\\\\"fe32a31f-cc96-4ff3-9bbe-9dc8c53fe0cc\\\\\", \\\\\"context\\\\\": \\\\\"Request from intelligent orchestrator: {\\\\\\\\\\\\\"action\\\\\\\\\\\\\": \\\\\\\\\\\\\"process_claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"claim_data\\\\\\\\\\\\\": {\\\\\\\\\\\\\"claim_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"TEST-INTEGRATION-001\\\\\\\\\\\\\", \\\\\\\\\\\\\"type\\\\\\\\\\\\\": \\\\\\\\\\\\\"outpatient\\\\\\\\\\\\\", \\\\\\\\\\\\\"amount\\\\\\\\\\\\\": 250.0, \\\\\\\\\\\\\"description\\\\\\\\\\\\\": \\\\\\\\\\\\\"Integration test claim\\\\\\\\\\\\\", \\\\\\\\\\\\\"customer_id\\\\\\\\\\\\\": \\\\\\\\\\\\\"test_customer\\\\\\\\\\\\\", \\\\\\\\\\\\\"policy_number\\\\\\\\\\\\\": \\\\\\\\\\\\\"POL_TEST_001\\\\\\\\\\\\\"}}\\\\\"}\",\\n    \"expected_output\": \"clarification_response\"\\n  },\\n  \"agent\": \"intake_clarifier\",\\n  \"specialties\": [\\n    \"Claims validation and clarification\",\\n    \"Fraud risk assessment\",\\n    \"Customer information verification\",\\n    \"Document completeness checking\"\\n  ]\\n}'}]}], 'contextId': '4b48e7bd-2842-4ee6-9913-986e499c39cd', 'history': [{'contextId': '4b48e7bd-2842-4ee6-9913-986e499c39cd', 'kind': 'message', 'messageId': 'msg-08a1fb47-9cd0-45f1-a6d6-faf4c000d55b', 'parts': [{'kind': 'text', 'text': 'Task: claim_intake: {\"action\": \"process_claim\", \"claim_id\": \"TEST-INTEGRATION-001\", \"claim_data\": {\"claim_id\": \"TEST-INTEGRATION-001\", \"type\": \"outpatient\", \"amount\": 250.0, \"description\": \"Integration test claim\", \"customer_id\": \"test_customer\", \"policy_number\": \"POL_TEST_001\"}}. Parameters: {\"action\": \"claim_intake\", \"query\": \"{\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 250.0, \\\\\"description\\\\\": \\\\\"Integration test claim\\\\\", \\\\\"customer_id\\\\\": \\\\\"test_customer\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_TEST_001\\\\\"}}\", \"session_id\": \"fe32a31f-cc96-4ff3-9bbe-9dc8c53fe0cc\", \"context\": \"Request from intelligent orchestrator: {\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"TEST-INTEGRATION-001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 250.0, \\\\\"description\\\\\": \\\\\"Integration test claim\\\\\", \\\\\"customer_id\\\\\": \\\\\"test_customer\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_TEST_001\\\\\"}}\"}'}], 'role': 'user', 'taskId': '3b3d469a-f62f-49eb-b84a-6a64223c6931'}, {'contextId': '4b48e7bd-2842-4ee6-9913-986e499c39cd', 'kind': 'message', 'messageId': '00a16897-b97d-4e6e-8a56-d2bbcd4f9098', 'parts': [{'kind': 'text', 'text': '🏥 Starting claim intake clarification...'}], 'role': 'agent', 'taskId': '3b3d469a-f62f-49eb-b84a-6a64223c6931'}], 'id': '3b3d469a-f62f-49eb-b84a-6a64223c6931', 'kind': 'task', 'status': {'state': 'completed'}}}",
+          "agent_used": "intake_clarifier",
+          "task_type": "claim_intake",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"TEST-INTEGRATION-001\", \"claim_data\": {\"claim_id\": \"TEST-INTEGRATION-001\", \"type\": \"outpatient\", \"amount\": 250.0, \"description\": \"Integration test claim\", \"customer_id\": \"test_customer\", \"policy_number\": \"POL_TEST_001\"}}",
+          "timestamp": "2025-09-09T13:45:54.613015"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_04",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "agent_selection",
+      "title": "⏩ Skipped document_intelligence",
+      "description": "Azure AI determined document_intelligence is not needed: No documents to analyze",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:45:57.593689",
+      "agent_name": "document_intelligence",
+      "agent_reasoning": "No documents to analyze",
+      "details": {},
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_05",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to coverage_rules_engine",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:46:00.520646",
+      "agent_name": "coverage_rules_engine",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Policy compliance and final decision",
+        "agent_url": "http://localhost:8004"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_06",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - coverage_rules_engine",
+      "description": "Successfully completed coverage_evaluation",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:46:03.646905",
+      "agent_name": "coverage_rules_engine",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our coverage_rules_engine specialist and here's what they found:\n\n{'id': 'a2a-coverage_rules_engine-177cc924-fa91-4107-bce0-9cc3a1009d27', 'jsonrpc': '2.0', 'result': {'kind': 'message', 'messageId': '3ee23276-54eb-440c-91f1-131c84019da6', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"message\": \"Coverage evaluation completed: General coverage evaluation\",\\n  \"eligibility\": \"approved\",\\n  \"covered_amount\": 350.0,\\n  \"coverage_percentage\": 41.18,\\n  \"deductible\": 500\\n}'}], 'role': 'agent', 'taskId': '1b4f5857-1d1d-4950-8fc4-e949c3c80f59'}}",
+          "agent_used": "coverage_rules_engine",
+          "task_type": "coverage_evaluation",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"TEST-INTEGRATION-001\", \"claim_data\": {\"claim_id\": \"TEST-INTEGRATION-001\", \"type\": \"outpatient\", \"amount\": 250.0, \"description\": \"Integration test claim\", \"customer_id\": \"test_customer\", \"policy_number\": \"POL_TEST_001\"}}",
+          "timestamp": "2025-09-09T13:46:03.646855"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_07",
+      "claim_id": "CLAIM_20250909_134548",
+      "step_type": "completion",
+      "title": "🎉 Processing Complete",
+      "description": "Claim CLAIM_20250909_134548 processed successfully",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:46:06.646696",
+      "agent_name": null,
+      "agent_reasoning": null,
+      "details": {
+        "final_status": "completed",
+        "total_processing_time_ms": 1000
+      },
+      "duration_ms": null
+    }
+  ],
+  "CLAIM_20250909_134657": [
+    {
+      "step_id": "step_01",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "agent_selection",
+      "title": "🎯 Agent Selection - Intelligent_Routing",
+      "description": "Selected Azure AI GPT-4o for intelligent_routing",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:46:57.091485",
+      "agent_name": "azure_ai_foundry",
+      "agent_reasoning": "Outpatient claim with documents, amount: $180.0",
+      "details": {
+        "task_type": "intelligent_routing",
+        "selected_agent": "azure_ai_foundry",
+        "alternatives_considered": []
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_02",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to intake_clarifier",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:47:00.106763",
+      "agent_name": "intake_clarifier",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Fraud detection and validation",
+        "agent_url": "http://localhost:8002"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_03",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - intake_clarifier",
+      "description": "Successfully completed claim_intake",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:47:03.101780",
+      "agent_name": "intake_clarifier",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our intake_clarifier specialist and here's what they found:\n\n{'id': 'a2a-intake_clarifier-a3d4492a-a0ea-46b2-99b9-90b3e592db7b', 'jsonrpc': '2.0', 'result': {'artifacts': [{'artifactId': 'd09afbd6-6d98-4b13-b6ad-42765dfbb859', 'description': 'Result of intake clarification process.', 'name': 'intake_clarification_result', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"claim_id\": \"OP-1001\",\\n  \"clarification_result\": {\\n    \"claim_id\": \"OP-1001\",\\n    \"validation_status\": \"requires_clarification\",\\n    \"completeness_score\": 40,\\n    \"fraud_risk_score\": 10,\\n    \"issues\": [\\n      \"customer_id\",\\n      \"description\",\\n      \"insufficient_description\"\\n    ],\\n    \"questions\": [\\n      \"Please provide customer id\",\\n      \"Please provide description\",\\n      \"Can you provide more detailed description?\"\\n    ],\\n    \"recommendations\": [\\n      \"Address validation issues before proceeding\"\\n    ]\\n  },\\n  \"agent\": \"intake_clarifier\"\\n}'}]}], 'contextId': '4e88d0f3-9507-4409-8ac2-4c2d4f1b8844', 'history': [{'contextId': '4e88d0f3-9507-4409-8ac2-4c2d4f1b8844', 'kind': 'message', 'messageId': 'msg-48de19c2-e838-4c73-8727-f344fae18c57', 'parts': [{'kind': 'text', 'text': 'Task: claim_intake: {\"action\": \"process_claim\", \"claim_id\": \"OP-1001\", \"claim_data\": {\"claim_id\": \"OP-1001\", \"type\": \"outpatient\", \"amount\": 180.0, \"description\": \"Insurance claim processing for OP-1001\", \"customer_id\": \"giugiu\", \"policy_number\": \"POL_OP-1001\", \"incident_date\": \"2024-01-15\", \"location\": \"Dashboard Processing\", \"documents\": [\"claim_form.pdf\", \"supporting_documents.pdf\"], \"customer_statement\": \"Processing Outpatient claim through dashboard interface\", \"patient_name\": \"John Smith\", \"provider\": \"CLN-ALPHA\", \"member_id\": \"M-001\", \"region\": \"US\"}}. Parameters: {\"action\": \"claim_intake\", \"query\": \"{\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"OP-1001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"OP-1001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 180.0, \\\\\"description\\\\\": \\\\\"Insurance claim processing for OP-1001\\\\\", \\\\\"customer_id\\\\\": \\\\\"giugiu\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_OP-1001\\\\\", \\\\\"incident_date\\\\\": \\\\\"2024-01-15\\\\\", \\\\\"location\\\\\": \\\\\"Dashboard Processing\\\\\", \\\\\"documents\\\\\": [\\\\\"claim_form.pdf\\\\\", \\\\\"supporting_documents.pdf\\\\\"], \\\\\"customer_statement\\\\\": \\\\\"Processing Outpatient claim through dashboard interface\\\\\", \\\\\"patient_name\\\\\": \\\\\"John Smith\\\\\", \\\\\"provider\\\\\": \\\\\"CLN-ALPHA\\\\\", \\\\\"member_id\\\\\": \\\\\"M-001\\\\\", \\\\\"region\\\\\": \\\\\"US\\\\\"}}\", \"session_id\": \"48974c56-d86d-4373-bdc3-a00e08ef84df\", \"context\": \"Request from intelligent orchestrator: {\\\\\"action\\\\\": \\\\\"process_claim\\\\\", \\\\\"claim_id\\\\\": \\\\\"OP-1001\\\\\", \\\\\"claim_data\\\\\": {\\\\\"claim_id\\\\\": \\\\\"OP-1001\\\\\", \\\\\"type\\\\\": \\\\\"outpatient\\\\\", \\\\\"amount\\\\\": 180.0, \\\\\"description\\\\\": \\\\\"Insurance claim processing for OP-1001\\\\\", \\\\\"customer_id\\\\\": \\\\\"giugiu\\\\\", \\\\\"policy_number\\\\\": \\\\\"POL_OP-1001\\\\\", \\\\\"incident_date\\\\\": \\\\\"2024-01-15\\\\\", \\\\\"location\\\\\": \\\\\"Dashboard Processing\\\\\", \\\\\"documents\\\\\": [\\\\\"claim_form.pdf\\\\\", \\\\\"supporting_documents.pdf\\\\\"], \\\\\"customer_statement\\\\\": \\\\\"Processing Outpatient claim through dashboard interface\\\\\", \\\\\"patient_name\\\\\": \\\\\"John Smith\\\\\", \\\\\"provider\\\\\": \\\\\"CLN-ALPHA\\\\\", \\\\\"member_id\\\\\": \\\\\"M-001\\\\\", \\\\\"region\\\\\": \\\\\"US\\\\\"}}\"}'}], 'role': 'user', 'taskId': '67d16e83-ee8b-40c3-8792-c6327708ab7e'}, {'contextId': '4e88d0f3-9507-4409-8ac2-4c2d4f1b8844', 'kind': 'message', 'messageId': '5084cfbe-b674-4120-9f86-25a29438ebe6', 'parts': [{'kind': 'text', 'text': '🏥 Starting claim intake clarification...'}], 'role': 'agent', 'taskId': '67d16e83-ee8b-40c3-8792-c6327708ab7e'}], 'id': '67d16e83-ee8b-40c3-8792-c6327708ab7e', 'kind': 'task', 'status': {'state': 'completed'}}}",
+          "agent_used": "intake_clarifier",
+          "task_type": "claim_intake",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"OP-1001\", \"claim_data\": {\"claim_id\": \"OP-1001\", \"type\": \"outpatient\", \"amount\": 180.0, \"description\": \"Insurance claim processing for OP-1001\", \"customer_id\": \"giugiu\", \"policy_number\": \"POL_OP-1001\", \"incident_date\": \"2024-01-15\", \"location\": \"Dashboard Processing\", \"documents\": [\"claim_form.pdf\", \"supporting_documents.pdf\"], \"customer_statement\": \"Processing Outpatient claim through dashboard interface\", \"patient_name\": \"John Smith\", \"provider\": \"CLN-ALPHA\", \"member_id\": \"M-001\", \"region\": \"US\"}}",
+          "timestamp": "2025-09-09T13:47:03.101656"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_04",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to document_intelligence",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:47:06.181635",
+      "agent_name": "document_intelligence",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Document analysis",
+        "agent_url": "http://localhost:8003"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_05",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - document_intelligence",
+      "description": "Successfully completed document_analysis",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:47:09.276116",
+      "agent_name": "document_intelligence",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our document_intelligence specialist and here's what they found:\n\n{'id': 'a2a-document_intelligence-bf9b63a0-2fb4-4d17-98b2-ce4f593620de', 'jsonrpc': '2.0', 'result': {'kind': 'message', 'messageId': 'fa3c73a4-2357-4077-bf46-f2567975ddf3', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"message\": \"Document intelligence completed: General document intelligence\",\\n  \"extracted_codes\": [\\n    \"M79.3\",\\n    \"Z51.11\"\\n  ],\\n  \"confidence\": 0.95\\n}'}], 'role': 'agent', 'taskId': 'ad14c195-c710-4f15-8a1f-4e0c147a498a'}}",
+          "agent_used": "document_intelligence",
+          "task_type": "document_analysis",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"OP-1001\", \"claim_data\": {\"claim_id\": \"OP-1001\", \"type\": \"outpatient\", \"amount\": 180.0, \"description\": \"Insurance claim processing for OP-1001\", \"customer_id\": \"giugiu\", \"policy_number\": \"POL_OP-1001\", \"incident_date\": \"2024-01-15\", \"location\": \"Dashboard Processing\", \"documents\": [\"claim_form.pdf\", \"supporting_documents.pdf\"], \"customer_statement\": \"Processing Outpatient claim through dashboard interface\", \"patient_name\": \"John Smith\", \"provider\": \"CLN-ALPHA\", \"member_id\": \"M-001\", \"region\": \"US\"}}",
+          "timestamp": "2025-09-09T13:47:09.276070"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_06",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "task_dispatch",
+      "title": "📤 Task Dispatch",
+      "description": "Sending task to coverage_rules_engine",
+      "status": "in_progress",
+      "timestamp": "2025-09-09T13:47:12.295138",
+      "agent_name": "coverage_rules_engine",
+      "agent_reasoning": null,
+      "details": {
+        "task_description": "Policy compliance and final decision",
+        "agent_url": "http://localhost:8004"
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_07",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "agent_response",
+      "title": "📥 Agent Response - coverage_rules_engine",
+      "description": "Successfully completed coverage_evaluation",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:47:15.449735",
+      "agent_name": "coverage_rules_engine",
+      "agent_reasoning": null,
+      "details": {
+        "result": {
+          "status": "success",
+          "response_type": "agent_response",
+          "message": "I consulted our coverage_rules_engine specialist and here's what they found:\n\n{'id': 'a2a-coverage_rules_engine-73d0cd36-bb25-4c32-88e5-af862a8f37ae', 'jsonrpc': '2.0', 'result': {'kind': 'message', 'messageId': '5eb59c1a-5e19-488e-bb25-b6ff35b93d71', 'parts': [{'kind': 'text', 'text': '{\\n  \"status\": \"success\",\\n  \"message\": \"Coverage evaluation completed: General coverage evaluation\",\\n  \"eligibility\": \"approved\",\\n  \"covered_amount\": 350.0,\\n  \"coverage_percentage\": 41.18,\\n  \"deductible\": 500\\n}'}], 'role': 'agent', 'taskId': 'ac76d28b-b4e9-4506-bf5d-ea9bb2009aae'}}",
+          "agent_used": "coverage_rules_engine",
+          "task_type": "coverage_evaluation",
+          "original_query": "{\"action\": \"process_claim\", \"claim_id\": \"OP-1001\", \"claim_data\": {\"claim_id\": \"OP-1001\", \"type\": \"outpatient\", \"amount\": 180.0, \"description\": \"Insurance claim processing for OP-1001\", \"customer_id\": \"giugiu\", \"policy_number\": \"POL_OP-1001\", \"incident_date\": \"2024-01-15\", \"location\": \"Dashboard Processing\", \"documents\": [\"claim_form.pdf\", \"supporting_documents.pdf\"], \"customer_statement\": \"Processing Outpatient claim through dashboard interface\", \"patient_name\": \"John Smith\", \"provider\": \"CLN-ALPHA\", \"member_id\": \"M-001\", \"region\": \"US\"}}",
+          "timestamp": "2025-09-09T13:47:15.449702"
+        }
+      },
+      "duration_ms": null
+    },
+    {
+      "step_id": "step_08",
+      "claim_id": "CLAIM_20250909_134657",
+      "step_type": "completion",
+      "title": "🎉 Processing Complete",
+      "description": "Claim CLAIM_20250909_134657 processed successfully",
+      "status": "completed",
+      "timestamp": "2025-09-09T13:47:18.389558",
+      "agent_name": null,
+      "agent_reasoning": null,
+      "details": {
+        "final_status": "completed",
+        "total_processing_time_ms": 1000
+      },
+      "duration_ms": null
+    }
+  ]
+}

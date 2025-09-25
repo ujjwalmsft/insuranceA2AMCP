@@ -1,0 +1,3213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Claims Processing Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Chat Interface Styles - Embedded to ensure loading */
+        .chat-btn {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 0.5rem !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.9rem !important;
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3) !important;
+        }
+
+        .chat-btn:hover {
+            background: linear-gradient(135deg, #1e3c72, #2a5298) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.4) !important;
+        }
+
+        /* Chat Modal Overlay */
+        .chat-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            display: none !important;
+            z-index: 10000 !important;
+            opacity: 0 !important;
+            transition: opacity 0.3s ease !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        .chat-overlay.active {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            border-radius: 1rem !important;
+            width: 98% !important;
+            max-width: 1800px !important;
+            height: 95vh !important;
+            max-height: 1200px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            transform: scale(0.9) !important;
+            transition: transform 0.3s ease !important;
+            position: relative !important;
+        }
+
+        .chat-overlay.active .chat-container {
+            transform: scale(1) !important;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            padding: 2rem !important;
+            border-radius: 1rem 1rem 0 0 !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+
+        .chat-header h3 {
+            font-size: 1.5rem !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+        }
+
+        .chat-close {
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            font-size: 1.8rem !important;
+            cursor: pointer !important;
+            padding: 0.5rem !important;
+            border-radius: 0.5rem !important;
+            transition: background 0.2s ease !important;
+            width: 50px !important;
+            height: 50px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1 !important;
+            padding: 1.5rem !important;
+            overflow-y: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9), rgba(255, 255, 255, 0.95)) !important;
+        }
+
+        /* Message Styles */
+        .message {
+            max-width: 80% !important;
+            padding: 1rem 1.5rem !important;
+            border-radius: 1rem !important;
+            position: relative !important;
+            animation: messageSlide 0.3s ease !important;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            align-self: flex-end !important;
+            margin-left: auto !important;
+            border-bottom-right-radius: 0.25rem !important;
+        }
+
+        .message.assistant {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #333 !important;
+            align-self: flex-start !important;
+            border: 1px solid rgba(42, 82, 152, 0.1) !important;
+            border-bottom-left-radius: 0.25rem !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .message.system {
+            background: rgba(59, 130, 246, 0.1) !important;
+            color: #1e40af !important;
+            align-self: center !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            font-style: italic !important;
+            text-align: center !important;
+            max-width: 70% !important;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #dc2626 !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            align-self: flex-start !important;
+        }
+
+        .message-content {
+            font-size: 1.1rem !important;
+            line-height: 1.6 !important;
+            word-wrap: break-word !important;
+        }
+
+        .message-timestamp {
+            font-size: 0.9rem !important;
+            opacity: 0.7 !important;
+            margin-top: 0.5rem !important;
+        }
+
+        /* Chat Input Area */
+        .chat-input-area {
+            padding: 1.5rem !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            border-radius: 0 0 1rem 1rem !important;
+            border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .chat-input-container {
+            display: flex !important;
+            gap: 1rem !important;
+            align-items: flex-end !important;
+        }
+
+        .chat-input {
+            flex: 1 !important;
+            border: 1px solid rgba(42, 82, 152, 0.2) !important;
+            border-radius: 0.75rem !important;
+            padding: 1rem 1.5rem !important;
+            font-size: 1.1rem !important;
+            font-family: inherit !important;
+            resize: none !important;
+            max-height: 150px !important;
+            min-height: 60px !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .chat-input:focus {
+            outline: none !important;
+            border-color: #2a5298 !important;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1) !important;
+            background: white !important;
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.75rem !important;
+            padding: 1rem 1.75rem !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            font-weight: 600 !important;
+            font-size: 1.1rem !important;
+            min-width: 120px !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+        }
+
+        .chat-send-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e3c72, #2a5298) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            padding: 0.75rem 1rem !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-radius: 1rem !important;
+            align-self: flex-start !important;
+            border: 1px solid rgba(42, 82, 152, 0.1) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            animation: messageSlide 0.3s ease !important;
+        }
+
+        .typing-dots {
+            display: flex !important;
+            gap: 0.25rem !important;
+        }
+
+        .typing-dot {
+            width: 6px !important;
+            height: 6px !important;
+            border-radius: 50% !important;
+            background: #2a5298 !important;
+            animation: typingDot 1.4s infinite ease-in-out !important;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s !important; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s !important; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s !important; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            30% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .connection-status {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.8rem !important;
+            opacity: 0.9 !important;
+        }
+
+        .status-dot {
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50% !important;
+            background: #22c55e !important;
+            animation: pulse 2s infinite !important;
+        }
+
+        .status-dot.disconnected {
+            background: #ef4444 !important;
+            animation: none !important;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px !important;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1) !important;
+            border-radius: 3px !important;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(42, 82, 152, 0.3) !important;
+            border-radius: 3px !important;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(42, 82, 152, 0.5) !important;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 98% !important;
+                height: 95vh !important;
+                max-height: none !important;
+            }
+            
+            .message {
+                max-width: 90% !important;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #0f2027 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #2a5298;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #e8f5e8;
+            border-radius: 2rem;
+            color: #2d7d32;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .employee-dashboard-btn {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .employee-dashboard-btn:hover {
+            background: #1e3c72;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Claims Overview Cards */
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .overview-card h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .overview-card p {
+            color: #666;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* Claims Section */
+        .claims-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .refresh-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .refresh-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Claims Table */
+        .claims-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .claim-item {
+            background: #f8f9ff;
+            border: 1px solid #e3e8ff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .claim-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .claim-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 200px;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .claim-id {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .claim-amount {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2a5298;
+        }
+
+        .claim-date {
+            color: #666;
+        }
+
+        .claim-status {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .status-submitted {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .claim-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .claim-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .process-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .process-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+
+        .view-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .view-btn:hover {
+            background: #1976d2;
+            transform: translateY(-1px);
+        }
+
+        /* Activity Log */
+        .activity-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #f8f9ff;
+        }
+
+        .activity-time {
+            font-size: 0.9rem;
+            color: #666;
+            min-width: 100px;
+        }
+
+        .activity-message {
+            flex: 1;
+            color: #333;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .activity-claim {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .activity-process {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .activity-complete {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .activity-skipped {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .activity-error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        /* Pagination Styles */
+        .pagination-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .pagination-btn:disabled {
+            background: linear-gradient(135deg, #cbd5e0, #a0aec0);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .page-number {
+            background: rgba(255, 255, 255, 0.8);
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .page-number:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .page-number.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            font-weight: 600;
+        }
+
+        .page-number.ellipsis {
+            background: transparent;
+            border: none;
+            cursor: default;
+            color: #a0aec0;
+        }
+
+        .page-number.ellipsis:hover {
+            background: transparent;
+            color: #a0aec0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .overview-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .claim-header {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .claim-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .claim-actions {
+                flex-direction: column;
+            }
+            
+            /* Pagination responsive */
+            .pagination-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .pagination-controls {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .pagination-btn {
+                min-width: 80px;
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .page-numbers {
+                order: -1;
+            }
+            
+            .page-number {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+                min-width: 32px;
+            }
+        }
+
+        /* Loading states */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toggle Button Styles */
+        .toggle-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            box-shadow: 0 2px 8px rgba(17, 153, 142, 0.3);
+        }
+
+        .toggle-btn.active:hover {
+            box-shadow: 0 4px 16px rgba(17, 153, 142, 0.4);
+        }
+
+        /* Recent History Workflow Group Styles */
+        .workflow-group {
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .workflow-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .workflow-steps {
+            margin-top: 1rem;
+        }
+
+        /* Bootstrap Collapse Styles */
+        .collapse:not(.show) {
+            display: none;
+        }
+
+        .collapse.show {
+            display: block;
+        }
+
+        .collapsing {
+            height: 0;
+            overflow: hidden;
+            transition: height 0.35s ease;
+        }
+
+        /* Workflow Step Animation */
+        .workflow-step-item {
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step-item:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            transform: translateX(2px);
+        }
+
+        /* Enhanced status colors */
+        .status-completed { background-color: #d4edda; border-left-color: #28a745; }
+        .status-failed { background-color: #f8d7da; border-left-color: #dc3545; }
+        .status-in-progress { background-color: #cce5ff; border-left-color: #007bff; }
+        .status-pending { background-color: #fff3cd; border-left-color: #ffc107; }
+
+        /* Email Notification System Styles */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%);
+            opacity: 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.email-sent {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(255, 255, 255, 0.95));
+        }
+
+        .notification.email-failed {
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(255, 255, 255, 0.95));
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-title i {
+            font-size: 16px;
+        }
+
+        .notification.email-sent .notification-title i {
+            color: #10b981;
+        }
+
+        .notification.email-failed .notification-title i {
+            color: #ef4444;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .notification-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #374151;
+        }
+
+        .notification-content {
+            font-size: 13px;
+            color: #4b5563;
+            line-height: 1.4;
+        }
+
+        .notification-details {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7280;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .notification-details strong {
+            color: #374151;
+        }
+
+        /* Animation keyframes */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* WebSocket connection status indicator */
+        .websocket-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 9999;
+        }
+
+        .websocket-status.connected {
+            color: #10b981;
+        }
+
+        .websocket-status.disconnected {
+            color: #ef4444;
+        }
+
+        .websocket-status .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <!-- Email Notification System -->
+    <div id="notification-container" class="notification-container"></div>
+    
+    <!-- WebSocket Status Indicator -->
+    <div id="websocket-status" class="websocket-status disconnected">
+        <div class="status-dot"></div>
+        <span id="websocket-status-text">Connecting...</span>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Insurance Claims Processing</h1>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    System Online
+                </div>
+                <button class="chat-btn" onclick="openChat()">
+                    <i class="fas fa-comments"></i>
+                    Chat with Orchestrator
+                </button>
+                <a href="/agents" class="employee-dashboard-btn">
+                    <i class="fas fa-robot"></i>
+                    Agent Registry
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Claims Overview Section -->
+        <section class="claims-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Claims Overview
+                </h2>
+            </div>
+            
+            <div class="overview-cards">
+                <div class="overview-card">
+                    <h3 id="totalClaims">0</h3>
+                    <p>Total Claims</p>
+                </div>
+                <div class="overview-card">
+                    <h3 id="processingClaims">0</h3>
+                    <p>Processing</p>
+                </div>
+                <div class="overview-card">
+                    <h3 id="approvedClaims">0</h3>
+                    <p>Approved</p>
+                </div>
+                <div class="overview-card">
+                    <h3 id="pendingClaims">0</h3>
+                    <p>Submitted</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Claims Section -->
+        <section class="claims-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-file-medical"></i>
+                    Active Claims
+                </h2>
+                <button onclick="refreshClaims()" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+            
+            <div class="claims-grid" id="claimsContainer">
+                <!-- Claims will be loaded here -->
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div class="pagination-container" id="paginationContainer" style="display: none;">
+                <div class="pagination-info">
+                    <span id="paginationInfo">Showing 1-5 of 0 claims</span>
+                </div>
+                <div class="pagination-controls">
+                    <button id="prevBtn" class="pagination-btn" onclick="goToPreviousPage()" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Previous
+                    </button>
+                    <div class="page-numbers" id="pageNumbers">
+                        <!-- Page numbers will be generated here -->
+                    </div>
+                    <button id="nextBtn" class="pagination-btn" onclick="goToNextPage()">
+                        Next
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent History Section -->
+        <!-- <section class="activity-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-history"></i>
+                    <span id="sectionTitle">Recent Workflow History</span>
+                </h2> -->
+                <!-- Commented out toggle controls - only showing Recent History now -->
+                <!--
+                <div class="toggle-controls">
+                    <button id="toggleViewBtn" class="toggle-btn active" onclick="toggleView()">
+                        <i class="fas fa-history"></i>
+                        Show Recent History
+                    </button>
+                </div>
+                -->
+            <!-- </div> -->
+            
+            <!-- <div class="activity-log" id="activityLog"> -->
+                <!-- Recent workflow history will be loaded here -->
+            <!-- </div> -->
+        <!-- </section> -->
+    </main>
+
+    <script>
+        // Global state for toggle functionality - commented out since we only show Recent History now
+        // let isShowingRecentHistory = false;
+        
+        // Pagination state
+        let allClaims = []; // Store all claims
+        let currentPage = 1;
+        const claimsPerPage = 5;
+        let totalPages = 1;
+        
+        // Commented out toggle functionality - only showing Recent History now
+        /*
+        // Toggle between Processing Steps and Recent History
+        function toggleView() {
+            const toggleBtn = document.getElementById('toggleViewBtn');
+            const sectionTitle = document.getElementById('sectionTitle');
+            
+            isShowingRecentHistory = !isShowingRecentHistory;
+            
+            if (isShowingRecentHistory) {
+                // Switch to Recent History view
+                toggleBtn.innerHTML = '<i class="fas fa-cogs"></i> Show Processing Steps';
+                sectionTitle.textContent = 'Recent History';
+                loadRecentHistory();
+                toggleBtn.classList.remove('active');
+            } else {
+                // Switch back to Processing Steps view
+                toggleBtn.innerHTML = '<i class="fas fa-history"></i> Show Recent History';
+                sectionTitle.textContent = 'Processing Steps';
+                loadProcessingSteps();
+                toggleBtn.classList.add('active');
+            }
+        }
+        */
+        
+        // Initialize intelligent claims dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧠 Intelligent Claims Dashboard initializing...');
+            console.log('🔧 Supporting Recent Workflow History View');
+            
+            loadClaims();
+            loadRecentHistory(); // Start with Recent History view only
+            
+            // Start smart auto-refresh system
+            startSmartAutoRefresh();
+            
+            console.log('✅ Intelligent Claims Dashboard ready!');
+        });
+        
+        // Smart auto-refresh system for active vs completed workflows
+        let refreshInterval = null;
+        let lastRefreshTime = null;
+        
+        function startSmartAutoRefresh() {
+            // Stop any existing interval
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            
+            // Smart refresh logic:
+            // - Check for workflow updates every 10 seconds
+            // - Check claims data every 60 seconds (for general updates)
+            let refreshCounter = 0;
+            
+            refreshInterval = setInterval(() => {
+                refreshCounter++;
+                lastRefreshTime = new Date();
+                
+                // Add visual feedback for refresh activity
+                updateRefreshIndicator(true);
+                
+                // Refresh Recent History view every 10 seconds
+                loadRecentHistory();
+                
+                // Refresh claims data every 60 seconds (6 × 10s intervals)
+                if (refreshCounter % 6 === 0) {
+                    refreshClaims();
+                }
+                
+                // Remove visual feedback after a short delay
+                setTimeout(() => updateRefreshIndicator(false), 1000);
+                
+            }, 10000); // Check every 10 seconds for workflow updates
+            
+            console.log('🔄 Smart auto-refresh started (10s active check, 60s claims refresh)');
+        }
+        
+        function stopSmartAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+                console.log('🛑 Smart auto-refresh stopped');
+            }
+        }
+        
+        function updateRefreshIndicator(isRefreshing) {
+            const sectionTitle = document.getElementById('sectionTitle');
+            const toggleBtn = document.getElementById('toggleViewBtn');
+            
+            if (isRefreshing) {
+                // Add spinning indicator
+                if (sectionTitle && !sectionTitle.innerHTML.includes('fa-sync')) {
+                    const currentText = sectionTitle.textContent || sectionTitle.innerHTML;
+                    sectionTitle.innerHTML = `${currentText} <i class="fas fa-sync fa-spin" style="color: #28a745; margin-left: 0.5rem; font-size: 0.8rem;"></i>`;
+                }
+            } else {
+                // Remove spinning indicator
+                if (sectionTitle && sectionTitle.innerHTML.includes('fa-sync')) {
+                    const textOnly = sectionTitle.textContent.replace(/\s*$/, ''); // Clean text only
+                    sectionTitle.textContent = textOnly;
+                }
+            }
+        }
+
+        // API calls
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(endpoint, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        // Format time ago
+        function formatTimeAgo(timestamp) {
+            if (!timestamp) return 'Unknown time';
+            
+            try {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - date) / 1000);
+                
+                if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
+                if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+                if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+                return `${Math.floor(diffInSeconds / 86400)}d ago`;
+            } catch (error) {
+                return 'Unknown time';
+            }
+        }
+
+        // Load recent history for the toggle view (showing all workflow logs)
+        async function loadRecentHistory() {
+            try {
+                // Use the local proxy route instead of direct connection to port 8001
+                const response = await fetch('/workflow-steps');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const workflows = data.workflows || {};
+                    
+                    // Get all sessions sorted by most recent activity (show all, not just 2)
+                    const sessions = Object.keys(workflows);
+                    if (sessions.length > 0) {
+                        const sortedSessions = sessions
+                            .sort((a, b) => {
+                                const aSteps = workflows[a] || [];
+                                const bSteps = workflows[b] || [];
+                                const aLatest = aSteps.length > 0 ? aSteps[aSteps.length - 1].timestamp : '';
+                                const bLatest = bSteps.length > 0 ? bSteps[bSteps.length - 1].timestamp : '';
+                                return bLatest.localeCompare(aLatest);
+                            });
+                        
+                        displayDetailedRecentHistory(workflows, sortedSessions);
+                    } else {
+                        showNoRecentHistory();
+                    }
+                } else {
+                    // Fallback to old API
+                    const fallbackResponse = await fetch('/api/recent-workflow-steps');
+                    const fallbackData = await fallbackResponse.json();
+                    
+                    if (fallbackData.status === 'success' && fallbackData.steps && fallbackData.steps.length > 0) {
+                        displayRecentHistoryInProcessingContainer(fallbackData.steps);
+                    } else {
+                        showNoRecentHistory();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading recent history:', error);
+                document.getElementById('activityLog').innerHTML = 
+                    '<p style="text-align: center; color: #666; padding: 1rem;">Failed to load recent history.</p>';
+            }
+        }
+        
+        // Show empty state when no recent history
+        // function showNoRecentHistory() {
+        //     const container = document.getElementById('activityLog');
+            
+        //     container.innerHTML = `
+        //         <div style="text-align: center; padding: 3rem 1rem; color: #6c757d;">
+        //             <i class="fas fa-history" style="font-size: 3rem; color: #dee2e6; margin-bottom: 1rem;"></i>
+        //             <h4 style="color: #495057; margin-bottom: 0.5rem;">No Recent History</h4>
+        //             <p style="margin-bottom: 1.5rem;">Completed claims will appear here after processing</p>
+        //             <div style="display: flex; justify-content: center; gap: 1rem;">
+        //                 <button onclick="openChat()" style="padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 0.375rem; cursor: pointer;">
+        //                     <i class="fas fa-plus"></i> Process New Claim
+        //                 </button>
+        //                 <button onclick="toggleView()" style="padding: 0.5rem 1rem; background: #17a2b8; color: white; border: none; border-radius: 0.375rem; cursor: pointer;">
+        //                     <i class="fas fa-cog"></i> View Processing Steps
+        //                 </button>
+        //             </div>
+        //         </div>
+        //     `;
+            
+        //     // Update section title
+        //     const sectionTitle = document.getElementById('sectionTitle');
+        //     if (sectionTitle) {
+        //         sectionTitle.textContent = 'Recent History - No Completed Claims';
+        //     }
+        // }
+
+        // Display detailed recent history from dynamic workflows (all claims with expandable step details)
+        function displayDetailedRecentHistory(workflows, sessions) {
+            const container = document.getElementById('activityLog');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No recent workflow history found.</p>';
+                return;
+            }
+
+            let html = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: #495057; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-history"></i> Recent Claims History
+                    </h4>
+                    <p style="color: #6c757d; margin: 0; font-size: 0.9rem;">
+                        Showing ${sessions.length} recent claim workflows from current_workflow_steps.json
+                    </p>
+                </div>
+            `;
+
+            sessions.forEach((sessionId, index) => {
+                const steps = workflows[sessionId] || [];
+                if (steps.length === 0) return;
+
+                const claimId = steps[0]?.claim_id || 'Unknown';
+                const latestStep = steps[steps.length - 1];
+                const workflowId = steps[0]?.workflow_id || sessionId;
+                
+                // Determine overall status
+                const hasErrors = steps.some(step => step.status === 'failed');
+                const hasInProgress = steps.some(step => step.status === 'in_progress');
+                const finalStatus = hasErrors ? 'Failed' : hasInProgress ? 'In Progress' : 'Completed';
+                
+                // Get status color
+                const statusColor = finalStatus === 'Failed' ? '#dc3545' : 
+                                  finalStatus === 'In Progress' ? '#007bff' : '#28a745';
+
+                // Get step counts
+                const completedSteps = steps.filter(step => step.status === 'completed').length;
+                const failedSteps = steps.filter(step => step.status === 'failed').length;
+                const inProgressSteps = steps.filter(step => step.status === 'in_progress').length;
+
+                // Create unique ID for this claim's collapsible content
+                const collapseId = `workflow_${index}`;
+
+                html += `
+                    <div style="margin-bottom: 1.5rem; border: 1px solid #e9ecef; border-radius: 0.75rem; background-color: #f8f9fa; overflow: hidden;">
+                        <!-- Claim Header -->
+                        <div style="padding: 1.25rem; background: linear-gradient(135deg, #2a5298, #1e3c72); color: white; cursor: pointer;" 
+                             onclick="toggleWorkflowDetails('${collapseId}')" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h5 style="margin: 0 0 0.5rem 0; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-file-medical"></i>
+                                        Claim ID: ${claimId}
+                                    </h5>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">
+                                        Session: ${sessionId.substring(0, 20)}...
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="padding: 0.4rem 0.8rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 500; background-color: ${statusColor}; color: white;">
+                                        ${finalStatus}
+                                    </span>
+                                    <div style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.9;">
+                                        <i class="fas fa-chevron-down" id="chevron_${collapseId}"></i>
+                                        ${steps.length} total steps
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step Summary Bar -->
+                        <div style="padding: 0.75rem 1.25rem; background-color: #ffffff; border-bottom: 1px solid #e9ecef;">
+                            <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.9rem;">
+                                <span style="color: #28a745;"><i class="fas fa-check-circle"></i> ${completedSteps} completed</span>
+                                ${failedSteps > 0 ? `<span style="color: #dc3545;"><i class="fas fa-exclamation-triangle"></i> ${failedSteps} failed</span>` : ''}
+                                ${inProgressSteps > 0 ? `<span style="color: #007bff;"><i class="fas fa-spinner"></i> ${inProgressSteps} in progress</span>` : ''}
+                                <span style="color: #6c757d; margin-left: auto;">
+                                    Last updated: ${new Date(latestStep.timestamp).toLocaleString()}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Step Details -->
+                        <div class="collapse" id="${collapseId}">
+                            <div style="padding: 1rem 1.25rem; background-color: #ffffff;">
+                                <h6 style="color: #495057; margin-bottom: 1rem; font-weight: 600;">
+                                    <i class="fas fa-list-ol"></i> Workflow Steps Details:
+                                </h6>
+                `;
+
+                // Add each step with detailed information
+                steps.forEach((step, stepIndex) => {
+                    const stepNumber = stepIndex + 1;
+                    const status = {
+                        'pending': { icon: 'clock', color: '#ffc107', bgColor: '#fff3cd' },
+                        'in_progress': { icon: 'spinner fa-spin', color: '#007bff', bgColor: '#cce5ff' },
+                        'completed': { icon: 'check-circle', color: '#28a745', bgColor: '#d4edda' },
+                        'failed': { icon: 'exclamation-triangle', color: '#dc3545', bgColor: '#f8d7da' },
+                        'skipped': { icon: 'forward', color: '#6c757d', bgColor: '#e2e3e5' }
+                    }[step.status] || { icon: 'clock', color: '#ffc107', bgColor: '#fff3cd' };
+                    
+                    const cleanTitle = step.title ? step.title.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim() : 'Workflow Step';
+                    const duration = step.duration_ms ? ` (${step.duration_ms}ms)` : '';
+                    
+                    html += `
+                        <div style="display: flex; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 0.5rem; background-color: ${status.bgColor}; border-left: 4px solid ${status.color};">
+                            <div style="width: 40px; display: flex; align-items: center; justify-content: center;">
+                                <div style="width: 30px; height: 30px; border-radius: 50%; background-color: ${status.color}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+                                    ${stepNumber}
+                                </div>
+                            </div>
+                            <div style="flex: 1; margin-left: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #495057; font-size: 0.95rem;">
+                                            <i class="fas fa-${status.icon}" style="color: ${status.color}; margin-right: 0.5rem;"></i>
+                                            ${cleanTitle}
+                                        </div>
+                                        <div style="color: #6c757d; font-size: 0.85rem; margin-top: 0.25rem;">
+                                            Type: <code>${step.step_type}</code> | Status: <strong style="color: ${status.color};">${step.status.toUpperCase()}</strong>${duration}
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: #868e96; text-align: right;">
+                                        ${new Date(step.timestamp).toLocaleTimeString()}
+                                        <br>
+                                        <small>${new Date(step.timestamp).toLocaleDateString()}</small>
+                                    </div>
+                                </div>
+                                ${step.description ? `
+                                    <div style="color: #495057; font-size: 0.9rem; margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255,255,255,0.7); border-radius: 0.25rem;">
+                                        ${step.description}
+                                    </div>
+                                ` : ''}
+                                ${step.details && Object.keys(step.details).length > 0 ? `
+                                    <div style="margin-top: 0.5rem;">
+                                        <details style="font-size: 0.85rem;">
+                                            <summary style="color: #007bff; cursor: pointer; font-weight: 500;">
+                                                <i class="fas fa-info-circle"></i> Additional Details
+                                            </summary>
+                                            <pre style="background-color: #f8f9fa; padding: 0.5rem; border-radius: 0.25rem; margin-top: 0.5rem; white-space: pre-wrap; color: #495057;">${JSON.stringify(step.details, null, 2)}</pre>
+                                        </details>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Toggle function for workflow details
+        function toggleWorkflowDetails(collapseId) {
+            const chevron = document.getElementById(`chevron_${collapseId}`);
+            const collapseElement = document.getElementById(collapseId);
+            
+            if (collapseElement.classList.contains('show')) {
+                // Collapse
+                collapseElement.classList.remove('show');
+                collapseElement.classList.add('collapsing');
+                chevron.style.transform = 'rotate(0deg)';
+                
+                // After animation
+                setTimeout(() => {
+                    collapseElement.classList.remove('collapsing');
+                }, 350);
+            } else {
+                // Expand
+                collapseElement.classList.add('collapsing');
+                collapseElement.classList.add('show');
+                chevron.style.transform = 'rotate(180deg)';
+                
+                // After animation
+                setTimeout(() => {
+                    collapseElement.classList.remove('collapsing');
+                }, 350);
+            }
+        }
+
+        // Display recent history from dynamic workflows (last 2 claims)
+        function displayRecentHistoryFromDynamicWorkflows(workflows, sessions) {
+            const container = document.getElementById('activityLog');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No recent workflow history found.</p>';
+                return;
+            }
+
+            let html = '<div style="margin-bottom: 1rem;"><h4 style="color: #495057; margin-bottom: 1rem;">📋 Recent Claims History</h4></div>';
+
+            sessions.forEach((sessionId, index) => {
+                const steps = workflows[sessionId] || [];
+                if (steps.length === 0) return;
+
+                const claimId = steps[0]?.claim_id || 'Unknown';
+                const latestStep = steps[steps.length - 1];
+                const finalStatus = latestStep?.step_type === 'final_decision' ? 
+                    (latestStep.details?.decision === 'denied' ? 'Denied' : 'Completed') : 
+                    'In Progress';
+                
+                // Get status color
+                const statusColor = finalStatus === 'Denied' ? '#dc3545' : 
+                                  finalStatus === 'Completed' ? '#28a745' : '#007bff';
+
+                html += `
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e9ecef; border-radius: 0.5rem; background-color: #f8f9fa;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                            <h5 style="margin: 0; color: #495057; font-weight: 600;">${claimId}</h5>
+                            <span style="padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 500; color: white; background-color: ${statusColor};">
+                                ${finalStatus}
+                            </span>
+                        </div>
+                        
+                        <div style="color: #6c757d; font-size: 0.9rem; margin-bottom: 0.75rem;">
+                            <strong>Steps Completed:</strong> ${steps.length} | 
+                            <strong>Last Updated:</strong> ${new Date(latestStep.timestamp).toLocaleString()}
+                        </div>
+                        
+                        <div style="max-height: 200px; overflow-y: auto;">
+                `;
+
+                // Show abbreviated steps
+                steps.forEach((step, stepIndex) => {
+                    const status = {
+                        'pending': { icon: 'clock', color: '#ffc107' },
+                        'in_progress': { icon: 'spinner', color: '#007bff' },
+                        'completed': { icon: 'check-circle', color: '#28a745' },
+                        'failed': { icon: 'exclamation-triangle', color: '#dc3545' },
+                        'skipped': { icon: 'forward', color: '#6c757d' }
+                    }[step.status] || { icon: 'clock', color: '#ffc107' };
+                    
+                    const cleanTitle = step.title.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+                    
+                    html += `
+                        <div style="display: flex; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                            <i class="fas fa-${status.icon}" style="color: ${status.color}; width: 16px; margin-right: 0.75rem;"></i>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; color: #495057; font-size: 0.9rem;">${cleanTitle}</div>
+                                <div style="color: #868e96; font-size: 0.8rem;">${new Date(step.timestamp).toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Display recent history in the same container as processing steps
+        function displayRecentHistoryInProcessingContainer(steps) {
+            const container = document.getElementById('activityLog');
+            
+            if (steps.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No recent workflow history found.</p>';
+                return;
+            }
+            
+            // Group steps by claim_id to show last 2 workflows
+            const stepsByClaim = {};
+            steps.forEach(step => {
+                const claimId = step.claim_id || 'unknown';
+                if (!stepsByClaim[claimId]) {
+                    stepsByClaim[claimId] = [];
+                }
+                stepsByClaim[claimId].push(step);
+            });
+            
+            // Get the 2 most recent claims (by latest timestamp in each group)
+            const claimGroups = Object.entries(stepsByClaim)
+                .map(([claimId, claimSteps]) => ({
+                    claimId,
+                    // Sort steps in CHRONOLOGICAL ORDER (oldest first)
+                    steps: claimSteps.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
+                    latestTimestamp: new Date(Math.max(...claimSteps.map(s => new Date(s.timestamp))))
+                }))
+                .sort((a, b) => b.latestTimestamp - a.latestTimestamp)
+                .slice(0, 2);
+            
+            // Create clean HTML structure without icon names
+            const historyHtml = claimGroups.map(group => {
+                const claimStepsHtml = group.steps.map((step, index) => `
+                    <div class="activity-item">
+                        <div class="activity-icon activity-${getStepStatusClass(step.step_type)}">
+                            <i class="fas fa-${getStepIconName(step.step_type || 'workflow')}"></i>
+                        </div>
+                        <div class="activity-time">${formatTime(step.timestamp)}</div>
+                        <div class="activity-message">
+                            <strong>Step ${index + 1}: ${step.title || step.step_name || 'Processing Step'}</strong>
+                            <br><span>${step.description || 'No description available'}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="workflow-group">
+                        <div class="workflow-group-header">
+                            <h3 style="margin: 0; color: #2d3748; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 12px; border-radius: 8px; display: inline-block;">
+                                <i class="fas fa-file-medical"></i> Claim ${group.claimId}
+                            </h3>
+                            <span style="color: #718096; font-size: 0.9rem;">${group.steps.length} steps completed</span>
+                        </div>
+                        <div class="workflow-steps">
+                            ${claimStepsHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = historyHtml;
+        }
+
+        // Load claims data
+        async function loadClaims() {
+            try {
+                const response = await apiCall('/api/claims');
+                const claims = response.claims || [];
+                
+                // Store all claims and reset pagination
+                allClaims = claims;
+                currentPage = 1;
+                totalPages = Math.ceil(claims.length / claimsPerPage);
+                
+                displayClaims();
+                updateOverviewStats(claims);
+                
+            } catch (error) {
+                console.error('Error loading claims:', error);
+                document.getElementById('claimsContainer').innerHTML = 
+                    '<p style="text-align: center; color: #666; padding: 2rem;">Failed to load claims. Please try again.</p>';
+                hidePagination();
+            }
+        }
+
+        // Display claims in the grid with pagination support
+        function displayClaims() {
+            const container = document.getElementById('claimsContainer');
+            
+            if (allClaims.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No claims found.</p>';
+                hidePagination();
+                return;
+            }
+            
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * claimsPerPage;
+            const endIndex = startIndex + claimsPerPage;
+            const claimsToShow = allClaims.slice(startIndex, endIndex);
+            
+            // Display the claims for current page
+            container.innerHTML = claimsToShow.map(claim => {
+                // Intelligent status mapping
+                const smartStatus = getSmartClaimStatus(claim);
+                
+                return `
+                <div class="claim-item">
+                    <div class="claim-header">
+                        <div class="claim-id">${claim.claimId}</div>
+                        <div class="claim-amount">$${claim.amount}</div>
+                        <div class="claim-date">${claim.submitted}</div>
+                        <div class="claim-status status-${smartStatus.class}">${smartStatus.display}</div>
+                    </div>
+                    
+                    <div class="claim-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Category</div>
+                            <div class="detail-value">${claim.category}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Patient</div>
+                            <div class="detail-value">${claim.patientName || 'N/A'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Last Update</div>
+                            <div class="detail-value">${claim.lastUpdate || claim.submitted}</div>
+                        </div>
+                        ${claim.workflow_results ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Processing</div>
+                            <div class="detail-value">🧠 Hybrid Intelligence</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+            
+            // Update pagination controls
+            updatePaginationControls();
+        }
+        
+        // Smart claim status mapping for intelligent orchestrator
+        function getSmartClaimStatus(claim) {
+            // Handle workflow_results from intelligent orchestrator
+            if (claim.workflow_results) {
+                const steps = claim.workflow_results.steps || [];
+                const completedSteps = steps.filter(step => step.status === 'completed').length;
+                const failedSteps = steps.filter(step => step.status === 'failed').length;
+                const totalSteps = steps.length;
+                
+                if (failedSteps > 0) {
+                    return { class: 'failed', display: 'FAILED', action: 'Retry' };
+                } else if (completedSteps === totalSteps && totalSteps > 0) {
+                    return { class: 'approved', display: 'APPROVED', action: 'Review' };
+                } else if (completedSteps > 0) {
+                    return { class: 'processing', display: 'PROCESSING', action: 'Continue' };
+                }
+            }
+            
+            // Handle actual Cosmos DB status values
+            const status = claim.status ? claim.status.toLowerCase() : 'submitted';
+            
+            switch (status) {
+                case 'marked for approval':
+                    return { class: 'approved', display: 'MARKED FOR APPROVAL', action: 'Review' };
+                case 'marked for rejection':
+                    return { class: 'failed', display: 'MARKED FOR REJECTION', action: 'Review' };
+                case 'submitted':
+                    return { class: 'submitted', display: 'SUBMITTED', action: 'Process' };
+                // Legacy status handling (in case old data exists)
+                case 'completed':
+                case 'approved':
+                    return { class: 'approved', display: 'APPROVED', action: 'Review' };
+                case 'processing':
+                case 'in_progress':
+                    return { class: 'processing', display: 'PROCESSING', action: 'Continue' };
+                case 'failed':
+                case 'error':
+                case 'declined':
+                    return { class: 'failed', display: 'FAILED', action: 'Retry' };
+                case 'pending':
+                default:
+                    return { class: 'submitted', display: 'SUBMITTED', action: 'Process' };
+            }
+        }
+
+        // Update overview statistics
+        function updateOverviewStats(claims) {
+            const total = claims.length;
+            // Count based on actual Cosmos DB status values
+            const processing = claims.filter(c => {
+                const status = c.status ? c.status.toLowerCase() : '';
+                return status === 'processing' || status === 'in_progress';
+            }).length;
+            const approved = claims.filter(c => {
+                const status = c.status ? c.status.toLowerCase() : '';
+                return status === 'marked for approval' || status === 'approved';
+            }).length;
+            const submitted = claims.filter(c => {
+                const status = c.status ? c.status.toLowerCase() : '';
+                return status === 'submitted';
+            }).length;
+            const rejected = claims.filter(c => {
+                const status = c.status ? c.status.toLowerCase() : '';
+                return status === 'marked for rejection' || status === 'rejected';
+            }).length;
+            
+            document.getElementById('totalClaims').textContent = total;
+            document.getElementById('processingClaims').textContent = processing;
+            document.getElementById('approvedClaims').textContent = approved;
+            // Use the pending field for submitted claims since that's what makes sense
+            document.getElementById('pendingClaims').textContent = submitted;
+        }
+
+        // Pagination Functions
+        function updatePaginationControls() {
+            const paginationContainer = document.getElementById('paginationContainer');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageNumbers = document.getElementById('pageNumbers');
+            
+            if (allClaims.length === 0) {
+                hidePagination();
+                return;
+            }
+            
+            // Show pagination container
+            paginationContainer.style.display = 'flex';
+            
+            // Update pagination info
+            const startItem = (currentPage - 1) * claimsPerPage + 1;
+            const endItem = Math.min(currentPage * claimsPerPage, allClaims.length);
+            paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${allClaims.length} claims`;
+            
+            // Update previous button
+            prevBtn.disabled = currentPage === 1;
+            
+            // Update next button
+            nextBtn.disabled = currentPage === totalPages;
+            
+            // Generate page numbers
+            generatePageNumbers();
+        }
+        
+        function generatePageNumbers() {
+            const pageNumbers = document.getElementById('pageNumbers');
+            pageNumbers.innerHTML = '';
+            
+            // Show max 7 page numbers with ellipsis
+            const maxVisible = 7;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+            
+            // Adjust start if we're near the end
+            if (endPage - startPage < maxVisible - 1) {
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }
+            
+            // Always show first page
+            if (startPage > 1) {
+                pageNumbers.appendChild(createPageButton(1));
+                if (startPage > 2) {
+                    pageNumbers.appendChild(createEllipsis());
+                }
+            }
+            
+            // Show page range
+            for (let i = startPage; i <= endPage; i++) {
+                pageNumbers.appendChild(createPageButton(i));
+            }
+            
+            // Always show last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pageNumbers.appendChild(createEllipsis());
+                }
+                pageNumbers.appendChild(createPageButton(totalPages));
+            }
+        }
+        
+        function createPageButton(pageNum) {
+            const button = document.createElement('div');
+            button.className = `page-number ${pageNum === currentPage ? 'active' : ''}`;
+            button.textContent = pageNum;
+            button.onclick = () => goToPage(pageNum);
+            return button;
+        }
+        
+        function createEllipsis() {
+            const ellipsis = document.createElement('div');
+            ellipsis.className = 'page-number ellipsis';
+            ellipsis.textContent = '...';
+            return ellipsis;
+        }
+        
+        function goToPage(pageNum) {
+            if (pageNum >= 1 && pageNum <= totalPages) {
+                currentPage = pageNum;
+                displayClaims();
+            }
+        }
+        
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayClaims();
+            }
+        }
+        
+        function goToNextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayClaims();
+            }
+        }
+        
+        function hidePagination() {
+            const paginationContainer = document.getElementById('paginationContainer');
+            paginationContainer.style.display = 'none';
+        }
+
+        // Smart workflow routing: determine if workflow is active or completed
+        function isWorkflowActive(steps) {
+            if (!steps || steps.length === 0) return false;
+            
+            const latestStep = steps[steps.length - 1];
+            const now = new Date();
+            const lastActivity = new Date(latestStep.timestamp);
+            const timeSinceLastActivity = (now - lastActivity) / 1000 / 60; // minutes
+            
+            // Consider workflow active if:
+            // 1. Has steps with 'in_progress' or 'pending' status, OR
+            // 2. Last activity was within 1 minute (grace period)
+            const hasActiveSteps = steps.some(step => 
+                step.status === 'in_progress' || step.status === 'pending'
+            );
+            
+            const withinGracePeriod = timeSinceLastActivity <= 1;
+            
+            // Workflow is active if it has active steps OR within grace period
+            return hasActiveSteps || withinGracePeriod;
+        }
+        
+        // Get active workflows for Processing Steps view
+        function getActiveWorkflows(workflows) {
+            const activeWorkflows = {};
+            
+            for (const [sessionId, steps] of Object.entries(workflows)) {
+                if (isWorkflowActive(steps)) {
+                    activeWorkflows[sessionId] = steps;
+                }
+            }
+            
+            return activeWorkflows;
+        }
+        
+        // Get completed workflows for Recent History view
+        function getCompletedWorkflows(workflows, limit = 2) {
+            const completedWorkflows = {};
+            
+            for (const [sessionId, steps] of Object.entries(workflows)) {
+                if (!isWorkflowActive(steps)) {
+                    completedWorkflows[sessionId] = steps;
+                }
+            }
+            
+            // Sort by most recent activity and limit
+            const sortedSessions = Object.keys(completedWorkflows)
+                .sort((a, b) => {
+                    const aSteps = completedWorkflows[a] || [];
+                    const bSteps = completedWorkflows[b] || [];
+                    const aLatest = aSteps.length > 0 ? aSteps[aSteps.length - 1].timestamp : '';
+                    const bLatest = bSteps.length > 0 ? bSteps[bSteps.length - 1].timestamp : '';
+                    return bLatest.localeCompare(aLatest);
+                })
+                .slice(0, limit);
+            
+            const result = {};
+            sortedSessions.forEach(sessionId => {
+                result[sessionId] = completedWorkflows[sessionId];
+            });
+            
+            return result;
+        }
+
+        // Commented out Processing Steps functionality - only showing Recent History now
+        /*
+        // Load processing steps with dynamic workflow tracking
+        async function loadProcessingSteps() {
+            try {
+                // Use the local proxy route instead of direct connection to port 8001
+                const response = await fetch('/workflow-steps');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const workflows = data.workflows || {};
+                    
+                    // Simple check: Look for workflows with truly active steps (in_progress or pending)
+                    const activeSession = findActiveWorkflowSession(workflows);
+                    
+                    if (activeSession) {
+                        const steps = workflows[activeSession] || [];
+                        
+                        if (steps.length > 0) {
+                            // Show live processing with active indicator
+                            displayDynamicProcessingSteps(steps, true); // true = isActive
+                        } else {
+                            showNoActiveProcessing();
+                        }
+                    } else {
+                        // No truly active processing - show empty state
+                        showNoActiveProcessing();
+                    }
+                } else {
+                    // Fallback to old API if dynamic workflow API is not available
+                    const fallbackResponse = await apiCall('/api/processing-steps');
+                    let steps = fallbackResponse.steps || [];
+                    
+                    if (fallbackResponse.workflow_results && fallbackResponse.workflow_results.steps) {
+                        steps = transformIntelligentOrchestatorSteps(fallbackResponse.workflow_results.steps);
+                    }
+                    
+                    displayProcessingSteps(steps);
+                }
+                
+            } catch (error) {
+                console.error('Error loading processing steps:', error);
+                document.getElementById('activityLog').innerHTML = 
+                    '<p style="text-align: center; color: #666; padding: 1rem;">Failed to load processing steps.</p>';
+            }
+        }
+        
+        // Find session with truly active processing (in_progress or pending steps)
+        function findActiveWorkflowSession(workflows) {
+            for (const [sessionId, steps] of Object.entries(workflows)) {
+                if (steps && steps.length > 0) {
+                    // Check if any step is currently in_progress or pending
+                    const hasActiveStep = steps.some(step => 
+                        step.status === 'in_progress' || step.status === 'pending'
+                    );
+                    
+                    if (hasActiveStep) {
+                        console.log(`🔴 Found active processing in session: ${sessionId}`);
+                        return sessionId;
+                    }
+                }
+            }
+            
+            console.log('✅ No active processing detected');
+            return null;
+        }
+        */
+        
+        // Commented out Processing Steps functionality - only showing Recent History now
+        /*
+        // Show empty state when no active processing
+        function showNoActiveProcessing() {
+            const container = document.getElementById('activityLog');
+            
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem 1rem; color: #6c757d;">
+                    <i class="fas fa-clock" style="font-size: 3rem; color: #dee2e6; margin-bottom: 1rem;"></i>
+                    <h4 style="color: #495057; margin-bottom: 0.5rem;">No Active Processing</h4>
+                    <p style="margin-bottom: 1.5rem;">Claims will appear here while being processed</p>
+                    <div style="display: flex; justify-content: center; gap: 1rem;">
+                        <button onclick="openChat()" style="padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 0.375rem; cursor: pointer;">
+                            <i class="fas fa-plus"></i> Process New Claim
+                        </button>
+                        <button onclick="toggleView()" style="padding: 0.5rem 1rem; background: #28a745; color: white; border: none; border-radius: 0.375rem; cursor: pointer;">
+                            <i class="fas fa-history"></i> View Recent History
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Update section title
+            const sectionTitle = document.getElementById('sectionTitle');
+            if (sectionTitle) {
+                sectionTitle.textContent = 'Processing Steps - Waiting for Claims';
+            }
+        }
+        */
+
+        // Transform intelligent orchestrator steps to UI format
+        function transformIntelligentOrchestatorSteps(orchestratorSteps) {
+            return orchestratorSteps.map(step => {
+                const stepName = step.step.replace('_', ' ').toUpperCase();
+                const agentName = step.agent.replace('_', ' ').title();
+                
+                let description = '';
+                let statusIcon = 'info-circle';
+                let statusClass = 'process';
+                
+                if (step.status === 'completed') {
+                    description = `${stepName} completed successfully by ${agentName}`;
+                    statusIcon = 'check-circle';
+                    statusClass = 'complete';
+                } else if (step.status === 'skipped') {
+                    description = `${stepName} skipped - ${step.reason || 'Not required for this claim'}`;
+                    statusIcon = 'forward';
+                    statusClass = 'skipped';
+                } else if (step.status === 'failed') {
+                    description = `${stepName} failed - ${step.error || 'Unknown error'}`;
+                    statusIcon = 'exclamation-triangle';
+                    statusClass = 'error';
+                } else {
+                    description = `${stepName} in progress by ${agentName}`;
+                    statusIcon = 'spinner';
+                    statusClass = 'process';
+                }
+                
+                return {
+                    timestamp: new Date().toISOString(),
+                    title: stepName,
+                    description: description,
+                    agent_name: agentName,
+                    status: step.status,
+                    step_type: step.step,
+                    claim_id: step.claim_id || 'N/A',
+                    statusIcon: statusIcon,
+                    statusClass: statusClass
+                };
+            });
+        }
+
+        // Display dynamic workflow steps with claim ID, title, and description
+        function displayDynamicProcessingSteps(steps, isActive = false) {
+            const container = document.getElementById('activityLog');
+            
+            if (!steps || steps.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No processing steps recorded.</p>';
+                return;
+            }
+
+            // Get claim ID from the first step
+            const claimId = steps[0]?.claim_id || 'Unknown';
+            
+            // Update the section title to include claim ID and status
+            const sectionTitle = document.getElementById('sectionTitle');
+            if (isActive) {
+                sectionTitle.innerHTML = `
+                    <span>Processing Steps - ${claimId}</span>
+                    <span style="margin-left: 0.5rem; padding: 0.25rem 0.5rem; background: #28a745; color: white; border-radius: 1rem; font-size: 0.75rem; animation: pulse 2s infinite;">
+                        🔴 LIVE
+                    </span>
+                `;
+            } else {
+                sectionTitle.textContent = `Processing Steps - ${claimId}`;
+            }
+
+            let html = '';
+            
+            // Add live processing banner if active
+            if (isActive) {
+                html += `
+                    <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; text-align: center;">
+                        <i class="fas fa-cog fa-spin" style="margin-right: 0.5rem;"></i>
+                        <strong>Active Processing</strong> - This claim is currently being processed
+                    </div>
+                `;
+            }
+            
+            steps.forEach((step, index) => {
+                // Map status to icon and class
+                const statusMapping = {
+                    'pending': { icon: 'clock', class: 'pending', color: '#ffc107' },
+                    'in_progress': { icon: 'spinner fa-spin', class: 'process', color: '#007bff' },
+                    'completed': { icon: 'check-circle', class: 'complete', color: '#28a745' },
+                    'failed': { icon: 'exclamation-triangle', class: 'error', color: '#dc3545' },
+                    'skipped': { icon: 'forward', class: 'skipped', color: '#6c757d' }
+                };
+                
+                const status = statusMapping[step.status] || statusMapping['pending'];
+                
+                // Format timestamp
+                const timestamp = new Date(step.timestamp).toLocaleString();
+                
+                // Clean up title (remove Unicode characters if needed)
+                const cleanTitle = step.title.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+                
+                // Add time since last activity for active workflows
+                let timeSinceActivity = '';
+                if (isActive && step.status === 'in_progress') {
+                    const now = new Date();
+                    const stepTime = new Date(step.timestamp);
+                    const minutesAgo = Math.floor((now - stepTime) / 1000 / 60);
+                    if (minutesAgo > 0) {
+                        timeSinceActivity = ` (${minutesAgo}m ago)`;
+                    } else {
+                        timeSinceActivity = ' (just now)';
+                    }
+                }
+                
+                html += `
+                    <div class="step ${status.class}" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid ${status.color}; background-color: #f8f9fa; border-radius: 0.375rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <i class="fas fa-${status.icon}" style="color: ${status.color}; margin-right: 0.5rem; width: 16px;"></i>
+                            <strong style="font-size: 1.1rem; color: #495057;">${cleanTitle}</strong>
+                            ${timeSinceActivity ? `<span style="color: #868e96; font-size: 0.85rem; margin-left: auto;">${timeSinceActivity}</span>` : ''}
+                        </div>
+                        <div style="color: #6c757d; font-size: 0.95rem; line-height: 1.4; margin-bottom: 0.5rem;">
+                            ${step.description}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #868e96;">
+                            <span>Step ${index + 1} of ${steps.length}</span>
+                            <span>${timestamp}</span>
+                        </div>
+                        ${step.duration_ms ? `<div style="font-size: 0.8rem; color: #28a745; margin-top: 0.25rem;">⏱️ Completed in ${step.duration_ms}ms</div>` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Display processing steps with intelligent orchestrator support
+        function displayProcessingSteps(steps) {
+            const container = document.getElementById('activityLog');
+            
+            if (steps.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No processing steps recorded.</p>';
+                return;
+            }
+            
+            // Sort steps in chronological order (oldest first for proper step sequence)
+            const sortedSteps = steps.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            container.innerHTML = sortedSteps.map(step => `
+                <div class="activity-item">
+                    <div class="activity-icon activity-${step.statusClass || getStepStatusClass(step.status)}">
+                        <i class="fas fa-${getStepIconName(step.step_type)}"></i>
+                    </div>
+                    <div class="activity-time">${formatTime(step.timestamp)}</div>
+                    <div class="activity-message">
+                        <strong>${step.title || step.step_type.replace('_', ' ').toUpperCase()}:</strong> ${step.description}
+                        ${step.agent_name ? `<br><small>🤖 Agent: ${step.agent_name}</small>` : ''}
+                        ${step.claim_id ? `<br><small>🔍 Claim: ${step.claim_id}</small>` : ''}
+                        ${step.status === 'skipped' ? `<br><small>⚡ Hybrid Intelligence: Optimized workflow</small>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get step icon name (just the name, no HTML)
+        function getStepIconName(stepType) {
+            const icons = {
+                'agent_discovery': 'search',
+                'agent_selection': 'user-check',
+                'task_dispatch': 'paper-plane',
+                'agent_response': 'reply',
+                'decision': 'brain',
+                'orchestrator_action': 'cogs',
+                'workflow': 'info-circle',
+                'processing_complete': 'check-circle',
+                'claim_intake': 'file-import',
+                'document_analysis': 'file-text',
+                'coverage_evaluation': 'shield-alt'
+            };
+            return icons[stepType] || 'info-circle';
+        }
+
+        // Get step icon based on type (legacy support)
+        function getStepIcon(stepType) {
+            return getStepIconName(stepType);
+        }
+
+        // Get step status class with intelligent orchestrator support
+        function getStepStatusClass(status) {
+            const classes = {
+                'started': 'process',
+                'completed': 'complete',
+                'failed': 'error',
+                'in_progress': 'process',
+                'skipped': 'skipped',
+                'agent_discovery': 'process',
+                'agent_selection': 'process',
+                'task_dispatch': 'process',
+                'agent_response': 'complete',
+                'decision': 'process',
+                'orchestrator_action': 'process',
+                'processing_complete': 'complete'
+            };
+            return classes[status] || 'process';
+        }
+
+        // Get activity icon based on type (legacy support)
+        function getActivityIcon(type) {
+            const icons = {
+                'claim': 'file-medical',
+                'process': 'cogs',
+                'complete': 'check-circle',
+                'error': 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        // Format timestamp
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Refresh claims
+        async function refreshClaims() {
+            console.log('🔄 Refreshing claims...');
+            await loadClaims();
+        }
+
+        // Open chat with specific claim context
+        function openChatWithClaim(claimId) {
+            // Open the chat interface
+            openChat();
+            
+            // Pre-populate with claim processing message
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.value = `Process claim with ${claimId}`;
+                chatInput.focus();
+                
+                // Automatically send the message after a brief delay
+                setTimeout(() => {
+                    sendChatMessage();
+                }, 500);
+            }
+        }
+
+        // Legacy processClaim function (kept for compatibility)
+        async function processClaim(claimId) {
+            // Redirect to chat-based processing
+            openChatWithClaim(claimId);
+        }
+
+        // View claim details
+        function viewClaimDetails(claimId) {
+            // This could open a modal or navigate to a detail page
+            alert(`Viewing details for claim ${claimId}\n\nThis would typically open a detailed view with:\n- Complete claim information\n- Processing history\n- Documents and attachments\n- Agent interactions`);
+        }
+    </script>
+
+    <!-- Email Notification System -->
+    <script>
+        // WebSocket connection for real-time notifications
+        let websocket = null;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 10;
+        
+        // Notification System
+        class NotificationSystem {
+            constructor() {
+                this.container = document.getElementById('notification-container');
+                this.websocketStatus = document.getElementById('websocket-status');
+                this.websocketStatusText = document.getElementById('websocket-status-text');
+                this.notifications = new Map();
+                this.nextId = 1;
+                
+                this.connectWebSocket();
+            }
+            
+            connectWebSocket() {
+                try {
+                    const wsUrl = `ws://${window.location.host}/ws/notifications`;
+                    console.log('🔌 Connecting to WebSocket:', wsUrl);
+                    
+                    websocket = new WebSocket(wsUrl);
+                    
+                    websocket.onopen = () => {
+                        console.log('📡 WebSocket connected');
+                        this.updateConnectionStatus(true);
+                        reconnectAttempts = 0;
+                        
+                        // Send heartbeat every 30 seconds
+                        setInterval(() => {
+                            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                                websocket.send(JSON.stringify({ type: 'heartbeat' }));
+                            }
+                        }, 30000);
+                    };
+                    
+                    websocket.onmessage = (event) => {
+                        try {
+                            const notification = JSON.parse(event.data);
+                            console.log('📧 Received notification:', notification);
+                            this.handleNotification(notification);
+                        } catch (error) {
+                            console.error('❌ Error parsing notification:', error);
+                        }
+                    };
+                    
+                    websocket.onclose = (event) => {
+                        console.log('🔌 WebSocket disconnected:', event.code, event.reason);
+                        this.updateConnectionStatus(false);
+                        this.scheduleReconnect();
+                    };
+                    
+                    websocket.onerror = (error) => {
+                        console.error('❌ WebSocket error:', error);
+                        this.updateConnectionStatus(false);
+                    };
+                    
+                } catch (error) {
+                    console.error('❌ Failed to connect WebSocket:', error);
+                    this.updateConnectionStatus(false);
+                    this.scheduleReconnect();
+                }
+            }
+            
+            scheduleReconnect() {
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+                    console.log(`🔄 Reconnecting in ${delay}ms (attempt ${reconnectAttempts + 1})`);
+                    
+                    setTimeout(() => {
+                        reconnectAttempts++;
+                        this.connectWebSocket();
+                    }, delay);
+                } else {
+                    console.error('❌ Max reconnection attempts reached');
+                    this.updateConnectionStatus(false, 'Connection failed');
+                }
+            }
+            
+            updateConnectionStatus(connected, message = null) {
+                const status = this.websocketStatus;
+                const text = this.websocketStatusText;
+                
+                if (connected) {
+                    status.className = 'websocket-status connected';
+                    text.textContent = 'Live notifications';
+                } else {
+                    status.className = 'websocket-status disconnected';
+                    text.textContent = message || 'Connecting...';
+                }
+            }
+            
+            handleNotification(notification) {
+                const { type, data } = notification;
+                
+                switch (type) {
+                    case 'email_notification':
+                        this.showEmailNotification(data);
+                        break;
+                    case 'connection_established':
+                        console.log('✅ Notification system ready');
+                        break;
+                    case 'heartbeat_response':
+                        // Connection is alive
+                        break;
+                    default:
+                        console.log('📢 Unknown notification type:', type);
+                }
+            }
+            
+            showEmailNotification(data) {
+                const { claim_id, email_status, details } = data;
+                
+                let title, icon, className;
+                
+                if (email_status === 'sent') {
+                    title = '📧 Email Sent Successfully';
+                    icon = 'fas fa-check-circle';
+                    className = 'email-sent';
+                } else if (email_status === 'failed') {
+                    title = '📧 Email Failed';
+                    icon = 'fas fa-exclamation-circle';
+                    className = 'email-failed';
+                } else {
+                    title = '📧 Email Status Update';
+                    icon = 'fas fa-envelope';
+                    className = 'email-info';
+                }
+                
+                const content = `Claim ${claim_id} notification ${email_status}`;
+                
+                const notificationDetails = {
+                    recipient: details?.recipient || 'Unknown',
+                    timestamp: new Date(details?.timestamp || Date.now()).toLocaleTimeString()
+                };
+                
+                this.showNotification(title, content, className, icon, notificationDetails);
+                
+                // Update claim row if visible
+                this.updateClaimEmailStatus(claim_id, email_status);
+            }
+            
+            showNotification(title, content, className = '', icon = 'fas fa-info-circle', details = null) {
+                const id = this.nextId++;
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${className}`;
+                notification.setAttribute('data-id', id);
+                
+                notification.innerHTML = `
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <i class="${icon}"></i>
+                            ${title}
+                        </div>
+                        <button class="notification-close" onclick="notificationSystem.closeNotification(${id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="notification-content">${content}</div>
+                    ${details ? `
+                        <div class="notification-details">
+                            ${Object.entries(details).map(([key, value]) => 
+                                `<strong>${key}:</strong> ${value}`
+                            ).join('<br>')}
+                        </div>
+                    ` : ''}
+                `;
+                
+                this.container.appendChild(notification);
+                this.notifications.set(id, notification);
+                
+                // Show with animation
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                // Auto-remove after 8 seconds
+                setTimeout(() => {
+                    this.closeNotification(id);
+                }, 8000);
+                
+                return id;
+            }
+            
+            closeNotification(id) {
+                const notification = this.notifications.get(id);
+                if (notification) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                        this.notifications.delete(id);
+                    }, 300);
+                }
+            }
+            
+            updateClaimEmailStatus(claimId, emailStatus) {
+                // Find the claim row and add email status indicator
+                const claimRow = document.querySelector(`[data-claim-id="${claimId}"]`);
+                if (claimRow) {
+                    // Add email status badge
+                    let emailBadge = claimRow.querySelector('.email-status-badge');
+                    if (!emailBadge) {
+                        emailBadge = document.createElement('span');
+                        emailBadge.className = 'email-status-badge';
+                        
+                        // Find a good place to add it (e.g., after status)
+                        const statusCell = claimRow.querySelector('.status-badge').parentNode;
+                        statusCell.appendChild(emailBadge);
+                    }
+                    
+                    emailBadge.innerHTML = emailStatus === 'sent' 
+                        ? '<i class="fas fa-envelope-circle-check" style="color: #10b981;" title="Email sent"></i>'
+                        : '<i class="fas fa-envelope-circle-xmark" style="color: #ef4444;" title="Email failed"></i>';
+                }
+            }
+        }
+        
+        // Initialize notification system when page loads
+        let notificationSystem;
+        document.addEventListener('DOMContentLoaded', () => {
+            notificationSystem = new NotificationSystem();
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (websocket) {
+                websocket.close();
+            }
+        });
+    </script>
+    
+    <!-- Chat Integration -->
+    <!-- Chat Modal -->
+    <div id="chatOverlay" class="chat-overlay">
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <h3>
+                    <i class="fas fa-robot"></i>
+                    Claims Orchestrator Assistant
+                </h3>
+                <div class="connection-status">
+                    <div class="status-dot" id="chatStatusDot"></div>
+                    <span id="chatStatus">Connected</span>
+                </div>
+                <button class="chat-close" onclick="closeChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message system">
+                    <div class="message-content">
+                        👋 Hello! I'm your Claims Orchestrator Assistant. I can help you query claims data, check processing status, and answer questions about your insurance database. What would you like to know?
+                    </div>
+                    <div class="message-timestamp" id="systemMessageTime"></div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+                <div class="chat-input-container">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Ask me about claims, coverage, or any data in the system..."
+                        rows="1"
+                        onkeydown="handleChatKeyDown(event)"
+                    ></textarea>
+                    <button id="chatSendBtn" class="chat-send-btn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        let chatMessages = [];
+        let chatSessionId = null;
+        
+        // Initialize chat session ID
+        function initializeChatSession() {
+            chatSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            updateSystemMessageTime();
+        }
+        
+        function updateSystemMessageTime() {
+            const timeElement = document.getElementById('systemMessageTime');
+            if (timeElement) {
+                timeElement.textContent = new Date().toLocaleTimeString();
+            }
+        }
+        
+        // Open chat modal
+        function openChat() {
+            if (!chatSessionId) {
+                initializeChatSession();
+            }
+            document.getElementById('chatOverlay').classList.add('active');
+            document.getElementById('chatInput').focus();
+        }
+        
+        // Close chat modal
+        function closeChat() {
+            // Stop any ongoing workflow polling
+            stopWorkflowPolling();
+            
+            document.getElementById('chatOverlay').classList.remove('active');
+        }
+        
+        // Handle Enter key in chat input
+        function handleChatKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        // Auto-resize textarea
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+        
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Clear input
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Add user message to chat
+            addMessageToChat('user', message);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Disable send button
+            const sendBtn = document.getElementById('chatSendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                // Show progress for long-running operations
+                const isClaimProcessing = message.toLowerCase().includes('process claim') || message.toLowerCase().includes('claim with');
+                if (isClaimProcessing) {
+                    showProcessingProgress(message);
+                }
+                
+                // Send message to claims orchestrator with NO TIMEOUT - wait indefinitely for result
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        sessionId: chatSessionId,
+                        timestamp: new Date().toISOString()
+                    })
+                    // NO signal/timeout - wait indefinitely for orchestrator response
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add assistant response
+                if (data.response) {
+                    addMessageToChat('assistant', data.response);
+                } else {
+                    addMessageToChat('error', 'Sorry, I received an empty response. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Chat error:', error);
+                removeTypingIndicator();
+                
+                // Enhanced error handling - only show errors for actual connection failures
+                let errorMessage = 'Sorry, I encountered an error. Please try again.';
+                
+                if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+                    errorMessage = `🔌 **Connection Error**
+                    
+❌ Unable to connect to the Claims Orchestrator.
+
+🔧 **Troubleshooting:**
+• Ensure the Claims Orchestrator agent is running
+• Check if all insurance agents are started
+• Verify network connectivity
+
+💡 **Quick Fix:** Try refreshing the page and restarting the agents.`;
+                } else if (error.message.includes('HTTP')) {
+                    errorMessage = `🚨 **Server Error**
+                    
+⚠️ The insurance processing service is temporarily unavailable.
+
+🔄 **Status:** ${error.message}
+⏳ **Expected Resolution:** 2-3 minutes
+
+💡 **Action:** Please try submitting your claim again in a few minutes.`;
+                } else {
+                    // For any other errors, provide a generic message
+                    errorMessage = `❌ **Processing Error**
+                    
+⚠️ An unexpected error occurred during claim processing.
+
+🔄 **Details:** ${error.message}
+
+💡 **Action:** Please try again. If the issue persists, contact support.`;
+                }
+                
+                addMessageToChat('error', errorMessage);
+                
+                // Update connection status
+                updateConnectionStatus(false);
+            } finally {
+                // Re-enable send button
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';                
+                input.focus();
+            }
+        }
+        
+        // Add message to chat
+        function addMessageToChat(role, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = formatMessageContent(content);
+            
+            const timestampDiv = document.createElement('div');
+            timestampDiv.className = 'message-timestamp';
+            timestampDiv.textContent = new Date().toLocaleTimeString();
+            
+            messageDiv.appendChild(contentDiv);
+            messageDiv.appendChild(timestampDiv);
+            messagesContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Store message in history
+            chatMessages.push({
+                role: role,
+                content: content,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+        // Format message content (basic markdown support)
+        function formatMessageContent(content) {
+            return content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <span>Assistant is typing</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Enhanced progress tracking for claim processing - uses dynamic workflow steps
+        function showProcessingProgress(message) {
+            const claimId = extractClaimId(message);
+            
+            addMessageToChat('assistant', `🔄 **Starting Multi-Agent Processing for ${claimId}**
+            
+⏳ **Processing Time:** May take 3-8 minutes for complex claims
+📊 **Agents Working:** Coverage Rules, Document Intelligence, Intake Clarifier
+🔄 **Please wait** - Real-time progress tracking enabled`);
+
+            // Start polling for dynamic workflow steps
+            startWorkflowPolling(chatSessionId);
+            
+            return null; // No interval to clear
+        }
+
+        // Start polling for workflow steps from the orchestrator
+        let workflowPollingInterval = null;
+        let lastDisplayedStepCount = 0;
+        
+        function startWorkflowPolling(sessionId) {
+            if (workflowPollingInterval) {
+                clearInterval(workflowPollingInterval);
+            }
+            
+            // Poll every 2 seconds for workflow updates
+            workflowPollingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/workflow-steps/${sessionId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.steps && data.steps.length > lastDisplayedStepCount) {
+                            displayNewWorkflowSteps(data.steps);
+                            lastDisplayedStepCount = data.steps.length;
+                        }
+                    }
+                } catch (error) {
+                    console.log('Workflow polling error (normal during processing):', error);
+                }
+            }, 2000);
+        }
+        
+        function stopWorkflowPolling() {
+            if (workflowPollingInterval) {
+                clearInterval(workflowPollingInterval);
+                workflowPollingInterval = null;
+                lastDisplayedStepCount = 0;
+            }
+        }
+        
+        function displayNewWorkflowSteps(steps) {
+            // Display only new steps since the last update
+            const newSteps = steps.slice(lastDisplayedStepCount);
+            
+            newSteps.forEach(step => {
+                let stepMessage = `📋 **${step.title}**`;
+                
+                if (step.description) {
+                    stepMessage += `\n\n${step.description}`;
+                }
+                
+                // Add status indicator
+                const statusIcon = {
+                    'pending': '⏳',
+                    'in_progress': '🔄',
+                    'completed': '✅',
+                    'failed': '❌',
+                    'skipped': '⏭️'
+                }[step.status] || '📋';
+                
+                stepMessage = `${statusIcon} ${stepMessage}`;
+                
+                // Add timing if available
+                if (step.duration_ms) {
+                    stepMessage += `\n\n⏱️ *Completed in ${step.duration_ms}ms*`;
+                }
+                
+                addMessageToChat('assistant', stepMessage);
+            });
+            
+            // Stop polling if we see a final decision step
+            const finalStep = steps[steps.length - 1];
+            if (finalStep && finalStep.step_type === 'final_decision') {
+                stopWorkflowPolling();
+            }
+        }
+
+        // Extract claim ID from message
+        function extractClaimId(message) {
+            const match = message.match(/([A-Z]+-\d+)/);
+            return match ? match[1] : 'your claim';
+        }
+
+        // Update connection status indicator
+        function updateConnectionStatus(isConnected) {
+            // Implementation would update a connection status indicator in the UI
+            console.log(`Connection status: ${isConnected ? 'Connected' : 'Disconnected'}`);
+        }
+        
+        // Update connection status
+        function updateConnectionStatus(isConnected) {
+            const statusDot = document.getElementById('chatStatusDot');
+            const statusText = document.getElementById('chatStatus');
+            
+            if (isConnected) {
+                statusDot.classList.remove('disconnected');
+                statusText.textContent = 'Connected';
+            } else {
+                statusDot.classList.add('disconnected');
+                statusText.textContent = 'Disconnected';
+            }
+        }
+        
+        // Close chat when clicking outside
+        document.getElementById('chatOverlay').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeChat();
+            }
+        });
+        
+        // Initialize chat session on page load
+        // Initialize chat session on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChatSession();
+            updateConnectionStatus(true);
+            
+            // Ensure chat modal is properly initialized
+            const chatOverlay = document.getElementById('chatOverlay');
+            if (chatOverlay) {
+                // Make sure the modal is properly positioned
+                chatOverlay.style.display = 'none';
+                chatOverlay.style.position = 'fixed';
+                chatOverlay.style.zIndex = '10000';
+                
+                console.log('✅ Chat interface initialized');
+            } else {
+                console.error('❌ Chat overlay not found');
+            }
+        });
+    </script>
+</body>
+</html>

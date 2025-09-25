@@ -1,0 +1,27 @@
+{
+    "id": "IP-01",
+    "claimId": "IP-01",
+    "extractedAt": "2025-09-25T12:07:11.727622+00:00",
+    "extractionSource": "Azure Document Intelligence",
+    "medical_bill_doc": {
+        "patient_name": "John Smith",
+        "bill_date": "2025-08-15",
+        "bill_amount": 1287
+    },
+    "memo_doc": {
+        "patient_name": "John Smith",
+        "medical_condition": "Acute cholecystitis"
+    },
+    "discharge_summary_doc": {
+        "patient_name": "John Smith",
+        "hospital_name": "Singapore General Hospital",
+        "admit_date": "2025-08-12",
+        "discharge_date": "2025-08-15",
+        "medical_condition": "Unknown condition"
+    },
+    "_rid": "R8FHAKo2OTMkAAAAAAAAAA==",
+    "_self": "dbs/R8FHAA==/colls/R8FHAKo2OTM=/docs/R8FHAKo2OTMkAAAAAAAAAA==/",
+    "_etag": "\"6b010ddf-0000-0200-0000-68d4bfee0000\"",
+    "_attachments": "attachments/",
+    "_ts": 1758773230
+}

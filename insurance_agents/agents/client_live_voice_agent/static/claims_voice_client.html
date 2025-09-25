@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claims Assistant Voice Live Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            width: 96vw;
+            max-width: 1400px;
+            height: 92vh;
+            min-height: 900px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white;
+            padding: 35px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 15px;
+            font-size: 36px;
+            font-weight: 600;
+        }
+
+        .status {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 35px;
+            overflow-y: auto;
+            background: #ffffff;
+            font-size: 16px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 18px 24px;
+            border-radius: 16px;
+            max-width: 85%;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-in;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            background: #0078d4;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            background: #f1f3f4;
+            color: #333;
+            margin-right: auto;
+        }
+
+        .message.system {
+            background: #e3f2fd;
+            color: #1565c0;
+            margin: 0 auto;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .sender {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 18px 24px;
+            margin-bottom: 20px;
+            background: #f1f3f4;
+            border-radius: 16px;
+            max-width: 85%;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .typing-dots div {
+            width: 10px;
+            height: 10px;
+            background: #666;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots div:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots div:nth-child(2) { animation-delay: -0.16s; }
+
+        .controls {
+            padding: 35px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 36px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: #0078d4;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #106ebe;
+        }
+
+        .btn-danger {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c62828;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 12px;
+        }
+
+        .status-indicator.connected {
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.connecting {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        .status-indicator.disconnected {
+            background: #f44336;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .info-section {
+            background: #e8f5e8;
+            padding: 25px;
+            margin: 25px 35px;
+            border-radius: 12px;
+            border-left: 6px solid #4caf50;
+            font-size: 16px;
+        }
+
+        .info-section h3 {
+            margin-bottom: 15px;
+            color: #2e7d32;
+            font-size: 20px;
+        }
+
+        .info-section ul {
+            margin-left: 25px;
+            color: #388e3c;
+        }
+
+        .info-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                width: 98vw;
+                height: 95vh;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .chat-area {
+                padding: 20px;
+            }
+            
+            .message {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+            
+            .controls {
+                padding: 20px;
+                gap: 15px;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                padding: 16px 32px;
+                font-size: 16px;
+                min-width: 180px;
+            }
+            
+            .info-section {
+                margin: 15px 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Claims Assistant Voice Live Chat</h1>
+            <div class="status">
+                <span class="status-indicator disconnected" id="statusIndicator"></span>
+                <span id="statusText">Ready to connect to Azure Voice Live</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>🎯 Claims Assistant Features</h3>
+            <ul>
+                <li><strong>Claim Lookup:</strong> Ask about specific claims like "What's the status of claim OP-02?"</li>
+                <li><strong>Policy Terms:</strong> Get definitions for insurance terms like "deductible" or "copay"</li>
+                <li><strong>Document Upload:</strong> Request upload links for claim documents</li>
+                <li><strong>Sample Claims:</strong> OP-02 (Daniel Ong, $92 consultation) and IP-03 (John Doe, $928 inpatient)</li>
+            </ul>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="message system">
+                <div>Welcome to Claims Assistant Voice Chat! This assistant specializes in insurance claims from your database. Click "Start Chat" to begin speaking with your claims specialist.</div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <span>🤖 Claims Assistant is thinking</span>
+            <div class="typing-dots">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">
+                <span>🚀 Start Claims Chat</span>
+            </button>
+            <button class="btn btn-danger" id="stopBtn" disabled>
+                <span>⏹️ Stop Chat</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Load configuration first -->
+    <script src="config.js"></script>
+    
+    <!-- Then load the voice client -->
+    <script src="claims_voice_client.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+# Insurance Claims Processing System - Complete Dependencies
+# All dependencies used across the entire project (agents + MCP server + dashboard)
+# No version constraints - allows pip to install latest compatible versions
+
+# A2A Protocol SDK
+a2a-sdk
+
+# MCP Protocol SDK
+mcp
+mcp[cli]
+fastmcp
+
+# Azure Services
+azure-cosmos
+azure-identity
+azure-communication-email
+azure-ai-agents
+
+# FastAPI and Web Framework
+fastapi
+uvicorn
+pydantic
+
+# HTTP Clients and Communication
+aiohttp
+httpx
+
+# AI and Agent Framework
+semantic-kernel
+
+# Data Processing
+pandas
+python-dotenv
+
+# CLI Framework
+click
+
+# Async Support
+asyncio-mqtt
+
+# Terminal Output and Logging
+colorama
+rich
+
+# Testing Framework
+pytest
+pytest-asyncio
+
+# WebSocket Support (for voice interface)
+websockets
+
+# JSON Processing
+orjson
+
+# Date/Time Utilities
+python-dateutil
+
+# File Handling
+pathlib2
+
+# Environment Management
+python-decouple
+
+# HTTP Request Utilities
+requests
+
+# Async Database Operations
+asyncpg
+
+# Memory Management
+psutil

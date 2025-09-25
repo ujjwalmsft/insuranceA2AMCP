@@ -1,0 +1,5 @@
+To reset items in claim_details, 
+-> update the status to 'submitted'
+-> remove verifcation_reason
+-> remove verification_timestamp
+-> remove updated_by

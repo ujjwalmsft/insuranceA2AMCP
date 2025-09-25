@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Agent Registry - Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Existing agent registry styles... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 50%, #005a9e 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #fff;
+            background: linear-gradient(45deg, #0078d4, #00bcf2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            font-weight: 400;
+            margin-left: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #0078d4, #005a9e);
+            color: white;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 120, 212, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-warning {
+            background: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: 2px solid rgba(220, 53, 69, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-warning:hover {
+            background: rgba(220, 53, 69, 1);
+            border-color: rgba(220, 53, 69, 0.5);
+        }
+
+        .btn-back {
+            background: rgba(40, 167, 69, 0.8);
+            color: white;
+            border: 2px solid rgba(40, 167, 69, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-back:hover {
+            background: rgba(40, 167, 69, 1);
+            border-color: rgba(40, 167, 69, 0.5);
+        }
+
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+        }
+
+        .azure-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            transform: rotate(0deg);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-icon.online { color: #00d4aa; }
+        .stat-icon.offline { color: #ff6b6b; }
+        .stat-icon.total { color: #0078d4; }
+        .stat-icon.azure { color: #00bcf2; }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            display: block;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .agent-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .agent-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .agent-card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        .agent-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .agent-url {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            z-index: 1;
+        }
+
+        .agent-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .agent-status.online {
+            background: #00d4aa;
+            box-shadow: 0 0 15px rgba(0, 212, 170, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .agent-status.offline {
+            background: #ff6b6b;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        .agent-card-body {
+            padding: 1.5rem;
+        }
+
+        .agent-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .info-icon {
+            width: 20px;
+            text-align: center;
+            color: #0078d4;
+        }
+
+        .agent-skills {
+            margin-bottom: 1.5rem;
+        }
+
+        .skills-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(45deg, #0078d4, #005a9e);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .agent-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            background: rgba(248, 113, 113, 0.2);
+            border-radius: 12px;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .dashboard-title { font-size: 2rem; }
+            .agents-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .agent-info { grid-template-columns: 1fr; }
+            .header-content { flex-direction: column; gap: 1rem; }
+            .logo h1 { font-size: 1.2rem; }
+            .logo .subtitle { font-size: 0.75rem; }
+        }
+
+        /* Chat Interface Styles - Embedded */
+        .chat-btn {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 0.5rem !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.9rem !important;
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3) !important;
+        }
+
+        .chat-btn:hover {
+            background: linear-gradient(135deg, #1e3c72, #2a5298) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.4) !important;
+        }
+
+        /* Chat Modal Overlay */
+        .chat-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            display: none !important;
+            z-index: 10000 !important;
+            opacity: 0 !important;
+            transition: opacity 0.3s ease !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        .chat-overlay.active {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            border-radius: 1rem !important;
+            width: 95% !important;
+            max-width: 1200px !important;
+            height: 90vh !important;
+            max-height: 800px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            transform: scale(0.9) !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        .chat-overlay.active .chat-container {
+            transform: scale(1) !important;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            padding: 1.5rem !important;
+            border-radius: 1rem 1rem 0 0 !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+
+        .chat-header h3 {
+            font-size: 1.2rem !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+
+        .chat-close {
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            font-size: 1.5rem !important;
+            cursor: pointer !important;
+            padding: 0.25rem !important;
+            border-radius: 0.25rem !important;
+            transition: background 0.2s ease !important;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1 !important;
+            padding: 1rem !important;
+            overflow-y: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9), rgba(255, 255, 255, 0.95)) !important;
+        }
+
+        /* Message Styles */
+        .message {
+            max-width: 80% !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 1rem !important;
+            position: relative !important;
+            animation: messageSlide 0.3s ease !important;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            align-self: flex-end !important;
+            margin-left: auto !important;
+            border-bottom-right-radius: 0.25rem !important;
+        }
+
+        .message.assistant {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #333 !important;
+            align-self: flex-start !important;
+            border: 1px solid rgba(42, 82, 152, 0.1) !important;
+            border-bottom-left-radius: 0.25rem !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .message.system {
+            background: rgba(59, 130, 246, 0.1) !important;
+            color: #1e40af !important;
+            align-self: center !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            font-style: italic !important;
+            text-align: center !important;
+            max-width: 70% !important;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #dc2626 !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            align-self: flex-start !important;
+        }
+
+        .message-content {
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+            word-wrap: break-word !important;
+        }
+
+        .message-timestamp {
+            font-size: 0.7rem !important;
+            opacity: 0.7 !important;
+            margin-top: 0.25rem !important;
+        }
+
+        /* Chat Input Area */
+        .chat-input-area {
+            padding: 1rem !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            border-radius: 0 0 1rem 1rem !important;
+            border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .chat-input-container {
+            display: flex !important;
+            gap: 0.5rem !important;
+            align-items: flex-end !important;
+        }
+
+        .chat-input {
+            flex: 1 !important;
+            border: 1px solid rgba(42, 82, 152, 0.2) !important;
+            border-radius: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 0.9rem !important;
+            font-family: inherit !important;
+            resize: none !important;
+            max-height: 100px !important;
+            min-height: 44px !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .chat-input:focus {
+            outline: none !important;
+            border-color: #2a5298 !important;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1) !important;
+            background: white !important;
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(135deg, #2a5298, #1e3c72) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.75rem !important;
+            padding: 0.75rem 1.25rem !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            font-weight: 600 !important;
+            min-width: 100px !important;
+            height: 44px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+        }
+
+        .chat-send-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e3c72, #2a5298) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            padding: 0.75rem 1rem !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-radius: 1rem !important;
+            align-self: flex-start !important;
+            border: 1px solid rgba(42, 82, 152, 0.1) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            animation: messageSlide 0.3s ease !important;
+        }
+
+        .typing-dots {
+            display: flex !important;
+            gap: 0.25rem !important;
+        }
+
+        .typing-dot {
+            width: 6px !important;
+            height: 6px !important;
+            border-radius: 50% !important;
+            background: #2a5298 !important;
+            animation: typingDot 1.4s infinite ease-in-out !important;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s !important; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s !important; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s !important; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: scale(1); opacity: 0.5; }
+            30% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .connection-status {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.8rem !important;
+            opacity: 0.9 !important;
+        }
+
+        .status-dot {
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50% !important;
+            background: #22c55e !important;
+            animation: pulse 2s infinite !important;
+        }
+
+        .status-dot.disconnected {
+            background: #ef4444 !important;
+            animation: none !important;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar { width: 6px !important; }
+        .chat-messages::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1) !important; border-radius: 3px !important; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(42, 82, 152, 0.3) !important; border-radius: 3px !important; }
+        .chat-messages::-webkit-scrollbar-thumb:hover { background: rgba(42, 82, 152, 0.5) !important; }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .chat-container { width: 95% !important; height: 90vh !important; max-height: none !important; }
+            .message { max-width: 90% !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <div>
+                        <h1>Agent Registry - Admin Dashboard</h1>
+                        <span class="subtitle">Manage Insurance Claims Processing Agents</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="/claims" class="btn btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Claims
+                    </a>
+                    <!-- <button class="chat-btn" onclick="openChat()">
+                        <i class="fas fa-comments"></i>
+                        Chat with Orchestrator
+                    </button> -->
+                    <button class="btn btn-secondary" onclick="refreshAgents()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="showAddAgentDialog()">
+                        <i class="fas fa-plus"></i>
+                        Add Agent
+                    </button>
+                    <button class="btn btn-warning" onclick="showRemoveAgentDialog()">
+                        <i class="fas fa-trash-alt"></i>
+                        Remove Agent
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Insurance Agent Registry</h1>
+                <p class="dashboard-subtitle">
+                    Monitor and manage your A2A insurance processing agents
+                </p>
+                <div class="azure-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Admin Access Required
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-server stat-icon total"></i>
+                    <span class="stat-number" id="totalAgents">0</span>
+                    <span class="stat-label">Total Agents</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle stat-icon online"></i>
+                    <span class="stat-number" id="onlineAgents">0</span>
+                    <span class="stat-label">Online</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-times-circle stat-icon offline"></i>
+                    <span class="stat-number" id="offlineAgents">0</span>
+                    <span class="stat-label">Offline</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-brain stat-icon azure"></i>
+                    <span class="stat-number" id="aiAgents">4</span>
+                    <span class="stat-label">AI Agents</span>
+                </div>
+            </div>
+
+            <div id="loadingSpinner" class="loading">
+                <div class="spinner"></div>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <div id="agentsGrid" class="agents-grid" style="display: none;">
+                <!-- Agent cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Agent Details Modal -->
+    <div id="agentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalAgentName">Agent Details</h2>
+                <span class="close" onclick="closeAgentModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Agent details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            margin: 0;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .detail-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-badge.online {
+            background: rgba(0, 212, 170, 0.1);
+            color: #00d4aa;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+        }
+
+        .status-badge.offline {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .capabilities-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .capability-tag {
+            background: linear-gradient(45deg, #0078d4, #005a9e);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Form Styles for Add/Remove Agent Modals */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+
+        .form-text {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .input-with-button {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .input-with-button .form-control {
+            flex: 1;
+        }
+
+        .btn-small {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .test-result {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 1rem;
+        }
+
+        .test-result.success {
+            background: rgba(0, 212, 170, 0.1);
+            border-color: rgba(0, 212, 170, 0.3);
+            color: #00d4aa;
+        }
+
+        .test-result.error {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
+            color: #dc3545;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .error-message {
+            background: rgba(255, 107, 107, 0.1);
+            color: #dc3545;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            background: rgba(0, 212, 170, 0.1);
+            color: #00d4aa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .agent-info-preview {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            margin-top: 1rem;
+        }
+
+        .agent-info-preview h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: linear-gradient(45deg, #c82333, #a71e2a);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+    </style>
+
+    <script>
+        let agents = [];
+        let refreshInterval;
+
+        // ============= ADD/REMOVE AGENT FUNCTIONALITY =============
+
+        // Show add agent dialog
+        function showAddAgentDialog() {
+            document.getElementById('addAgentModal').style.display = 'block';
+            document.getElementById('agentName').focus();
+            // Clear previous messages and inputs
+            document.getElementById('addAgentError').style.display = 'none';
+            document.getElementById('addAgentSuccess').style.display = 'none';
+            document.getElementById('testResult').style.display = 'none';
+            document.getElementById('agentName').value = '';
+            document.getElementById('agentUrl').value = '';
+        }
+
+        // Test agent URL function
+        async function testAgentUrl() {
+            const urlInput = document.getElementById('agentUrl');
+            const nameInput = document.getElementById('agentName');
+            const testBtn = document.getElementById('testUrlBtn');
+            const testResult = document.getElementById('testResult');
+            
+            const agentUrl = urlInput.value.trim();
+            
+            if (!agentUrl) {
+                testResult.className = 'test-result error';
+                testResult.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter an agent URL first.';
+                testResult.style.display = 'block';
+                return;
+            }
+
+            // Disable button and show loading
+            testBtn.disabled = true;
+            testBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+            
+            try {
+                // Simulate the same validation we do on the backend
+                if (!agentUrl.startsWith("http://") && !agentUrl.startsWith("https://")) {
+                    throw new Error("URL must start with http:// or https://");
+                }
+
+                const testUrl = agentUrl.replace(/\/$/, '') + '/.well-known/agent.json';
+                
+                const response = await fetch(testUrl, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const agentCard = await response.json();
+                    
+                    // If agent card has a name and user hasn't entered one, suggest it
+                    if (agentCard.name && !nameInput.value.trim()) {
+                        nameInput.value = agentCard.name;
+                    }
+                    
+                    testResult.className = 'test-result success';
+                    testResult.innerHTML = `
+                        <i class="fas fa-check-circle"></i> 
+                        <strong>Agent is online and responding!</strong><br>
+                        <strong>Name:</strong> ${agentCard.name || 'Not specified'}<br>
+                        <strong>Description:</strong> ${agentCard.description || 'Not specified'}<br>
+                        <strong>Version:</strong> ${agentCard.version || 'Not specified'}
+                    `;
+                } else {
+                    // Agent is not responding but we can still add it
+                    testResult.className = 'test-result error';
+                    testResult.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>Agent appears to be offline</strong><br>
+                        Could not fetch agent card from: ${testUrl}<br>
+                        <small>You can still add this agent - it will be marked as offline until it becomes available.</small>
+                    `;
+                }
+                
+            } catch (error) {
+                // Network or other error, but we can still add it
+                testResult.className = 'test-result error';
+                testResult.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <strong>Connection failed:</strong> ${error.message}<br>
+                    <small>You can still add this agent - it will be marked as offline until it becomes available.</small>
+                `;
+            } finally {
+                // Re-enable button
+                testBtn.disabled = false;
+                testBtn.innerHTML = '<i class="fas fa-vial"></i> Test';
+                testResult.style.display = 'block';
+            }
+        }
+
+        // Close add agent dialog
+        function closeAddAgentModal() {
+            document.getElementById('addAgentModal').style.display = 'none';
+        }
+
+        // Handle keyboard events in add agent modal
+        function handleAddAgentKeyDown(event) {
+            if (event.key === 'Enter') {
+                addAgent();
+            } else if (event.key === 'Escape') {
+                closeAddAgentModal();
+            }
+        }
+
+        // Add agent function
+        async function addAgent() {
+            const urlInput = document.getElementById('agentUrl');
+            const nameInput = document.getElementById('agentName');
+            const errorDiv = document.getElementById('addAgentError');
+            const successDiv = document.getElementById('addAgentSuccess');
+            
+            // Hide previous messages
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            const agentUrl = urlInput.value.trim();
+            const agentName = nameInput.value.trim();
+            
+            if (!agentUrl) {
+                showError('Please enter an agent URL.', 'addAgentError');
+                return;
+            }
+            
+            if (!agentName) {
+                showError('Please enter a name for the agent.', 'addAgentError');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/agents', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        url: agentUrl,
+                        name: agentName
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess(`Successfully added agent: ${result.agentName}`, 'addAgentSuccess');
+                    
+                    // Refresh agents list after 1 second
+                    setTimeout(() => {
+                        loadAgents();
+                        closeAddAgentModal();
+                    }, 1500);
+                } else {
+                    showError(result.error || 'Failed to add agent', 'addAgentError');
+                }
+
+            } catch (error) {
+                console.error('Error adding agent:', error);
+                showError('Network error: Could not connect to server', 'addAgentError');
+            }
+        }
+
+        // Show remove agent dialog
+        function showRemoveAgentDialog() {
+            document.getElementById('removeAgentModal').style.display = 'block';
+            populateRemoveAgentSelect();
+            // Clear previous messages
+            document.getElementById('removeAgentError').style.display = 'none';
+            document.getElementById('removeAgentSuccess').style.display = 'none';
+            document.getElementById('selectedAgentInfo').style.display = 'none';
+            document.getElementById('removeAgentBtn').disabled = true;
+        }
+
+        // Close remove agent dialog
+        function closeRemoveAgentModal() {
+            document.getElementById('removeAgentModal').style.display = 'none';
+        }
+
+        // Populate remove agent select with custom agents only
+        function populateRemoveAgentSelect() {
+            const select = document.getElementById('removeAgentSelect');
+            select.innerHTML = '<option value="">Choose an agent...</option>';
+            
+            // Only show custom agents (type === 'custom')
+            const customAgents = agents.filter(agent => agent.type === 'custom');
+            
+            if (customAgents.length === 0) {
+                select.innerHTML = '<option value="">No custom agents to remove</option>';
+                return;
+            }
+            
+            customAgents.forEach(agent => {
+                const option = document.createElement('option');
+                option.value = agent.agentId;
+                option.textContent = `${agent.name} (${agent.status})`;
+                select.appendChild(option);
+            });
+            
+            // Add event listener for selection
+            select.onchange = function() {
+                showSelectedAgentInfo(this.value);
+            };
+        }
+
+        // Show information about selected agent
+        function showSelectedAgentInfo(agentId) {
+            const infoDiv = document.getElementById('selectedAgentInfo');
+            const detailsDiv = document.getElementById('selectedAgentDetails');
+            const removeBtn = document.getElementById('removeAgentBtn');
+            
+            if (!agentId) {
+                infoDiv.style.display = 'none';
+                removeBtn.disabled = true;
+                return;
+            }
+            
+            const agent = agents.find(a => a.agentId === agentId);
+            if (!agent) {
+                infoDiv.style.display = 'none';
+                removeBtn.disabled = true;
+                return;
+            }
+            
+            detailsDiv.innerHTML = `
+                <div class="detail-grid">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value">${agent.name}</span>
+                    <span class="detail-label">Type:</span>
+                    <span class="detail-value">${agent.type.toUpperCase()}</span>
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">
+                        <span class="status-badge ${agent.status}">
+                            <i class="fas fa-circle"></i>
+                            ${agent.status.toUpperCase()}
+                        </span>
+                    </span>
+                    <span class="detail-label">Last Activity:</span>
+                    <span class="detail-value">${new Date(agent.lastActivity).toLocaleString()}</span>
+                </div>
+            `;
+            
+            infoDiv.style.display = 'block';
+            removeBtn.disabled = false;
+        }
+
+        // Remove agent function
+        async function removeAgent() {
+            const select = document.getElementById('removeAgentSelect');
+            const errorDiv = document.getElementById('removeAgentError');
+            const successDiv = document.getElementById('removeAgentSuccess');
+            
+            // Hide previous messages
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            const agentId = select.value;
+            
+            if (!agentId) {
+                showError('Please select an agent to remove.', 'removeAgentError');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/agents/${agentId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess(result.message, 'removeAgentSuccess');
+                    
+                    // Refresh agents list after 1 second
+                    setTimeout(() => {
+                        loadAgents();
+                        closeRemoveAgentModal();
+                    }, 1500);
+                } else {
+                    showError(result.error || 'Failed to remove agent', 'removeAgentError');
+                }
+
+            } catch (error) {
+                console.error('Error removing agent:', error);
+                showError('Network error: Could not connect to server', 'removeAgentError');
+            }
+        }
+
+        // Helper function to show error messages
+        function showError(message, elementId) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Helper function to show success messages  
+        function showSuccess(message, elementId) {
+            const successDiv = document.getElementById(elementId);
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const addModal = document.getElementById('addAgentModal');
+            const removeModal = document.getElementById('removeAgentModal');
+            
+            if (event.target === addModal) {
+                closeAddAgentModal();
+            } else if (event.target === removeModal) {
+                closeRemoveAgentModal();
+            }
+        }
+
+        // ============= END ADD/REMOVE AGENT FUNCTIONALITY =============
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAgents();
+            // Auto-refresh every 7 seconds for real-time updates
+            refreshInterval = setInterval(loadAgents, 7000);
+        });
+
+        // Load agents from the API
+        async function loadAgents() {
+            try {
+                const response = await fetch('/api/agents');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                agents = data.agents;
+
+                updateStats();
+                renderAgents();
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('agentsGrid').style.display = 'grid';
+                document.getElementById('errorMessage').style.display = 'none';
+
+            } catch (error) {
+                console.error('Error loading agents:', error);
+                showError('Failed to load agents. Please check your connection and try again.');
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalAgents = agents.length;
+            const onlineAgents = agents.filter(agent => agent.status === 'online').length;
+            const offlineAgents = totalAgents - onlineAgents;
+
+            document.getElementById('totalAgents').textContent = totalAgents;
+            document.getElementById('onlineAgents').textContent = onlineAgents;
+            document.getElementById('offlineAgents').textContent = offlineAgents;
+            document.getElementById('aiAgents').textContent = totalAgents; // All are AI agents
+        }
+
+        // Render agent cards
+        function renderAgents() {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = '';
+
+            agents.forEach(agent => {
+                const card = createAgentCard(agent);
+                grid.appendChild(card);
+            });
+        }
+
+        // Create a single agent card
+        function createAgentCard(agent) {
+            const card = document.createElement('div');
+            card.className = 'agent-card';
+            card.onclick = () => showAgentDetails(agent.agentId);
+
+            const statusClass = agent.status;
+            const lastActivity = new Date(agent.lastActivity).toLocaleTimeString();
+
+            card.innerHTML = `
+                <div class="agent-card-header">
+                    <div class="agent-status ${statusClass}"></div>
+                    <h3 class="agent-name">${agent.name}</h3>
+                    <p class="agent-url">${agent.type.toUpperCase()}</p>
+                </div>
+                <div class="agent-card-body">
+                    <div class="agent-info">
+                        <div class="info-item">
+                            <i class="fas fa-heartbeat info-icon"></i>
+                            <span>Status: ${agent.status.toUpperCase()}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock info-icon"></i>
+                            <span>Active: ${lastActivity}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-cogs info-icon"></i>
+                            <span>Type: ${agent.type}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-tasks info-icon"></i>
+                            <span>Claims: ${agent.currentClaims.length}</span>
+                        </div>
+                    </div>
+                    <div class="agent-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-magic"></i>
+                            <span>Capabilities</span>
+                        </div>
+                        <div class="skills-list">
+                            ${agent.capabilities.map(cap => `<span class="skill-tag">${cap.replace('_', ' ')}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); showAgentDetails('${agent.agentId}')">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); testAgent('${agent.agentId}')">
+                            <i class="fas fa-vial"></i>
+                            Test
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Show detailed agent information
+        async function showAgentDetails(agentId) {
+            try {
+                // Find the agent in our current list to get basic info
+                const agent = agents.find(a => a.agentId === agentId);
+                if (!agent) {
+                    alert('Agent not found in current list');
+                    return;
+                }
+
+                // Set modal title
+                document.getElementById('modalAgentName').textContent = agent.name;
+
+                // Fetch agent card details
+                const response = await fetch(`/api/agent-card/${agentId}`);
+                let agentCard = null;
+                let hasAgentCard = false;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        agentCard = data.agentCard;
+                        hasAgentCard = true;
+                        // Debug: Log agent card to console
+                        console.log('Agent card data:', agentCard);
+                    }
+                }
+
+                // Build the modal content
+                let modalContent = `
+                    <div class="detail-section">
+                        <h3 class="detail-title">
+                            <i class="fas fa-server"></i>
+                            Agent Information
+                        </h3>
+                        <div class="detail-grid">
+                            <span class="detail-label">Agent ID:</span>
+                            <span class="detail-value">${agent.agentId}</span>
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value">${agent.name}</span>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">${agent.type.toUpperCase()}</span>
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value">
+                                <span class="status-badge ${agent.status}">
+                                    <i class="fas fa-circle"></i>
+                                    ${agent.status.toUpperCase()}
+                                </span>
+                            </span>
+                            <span class="detail-label">Last Activity:</span>
+                            <span class="detail-value">${new Date(agent.lastActivity).toLocaleString()}</span>
+                            <span class="detail-label">Current Claims:</span>
+                            <span class="detail-value">${agent.currentClaims.length} claims</span>
+                        </div>
+                        
+                        <div style="margin-top: 1rem;">
+                            <span class="detail-label">Capabilities:</span>
+                            <div class="capabilities-list">
+                                ${agent.capabilities.map(cap => `<span class="capability-tag">${cap.replace('_', ' ')}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                if (hasAgentCard && agentCard) {
+                    modalContent += `
+                        <div class="detail-section">
+                            <h3 class="detail-title">
+                                <i class="fas fa-id-card"></i>
+                                A2A Agent Card
+                            </h3>
+                            <div class="detail-grid">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">${agentCard.description || 'N/A'}</span>
+                                ${(() => {
+                                    // Look for Azure AI assistant ID in the agent card
+                                    let azureId = agentCard.id;
+                                    
+                                    // If not found at top level, look in skills for Azure assistant ID
+                                    if (!azureId && agentCard.skills) {
+                                        const azureSkill = agentCard.skills.find(skill => 
+                                            skill.id && skill.id.startsWith('asst_')
+                                        );
+                                        if (azureSkill) {
+                                            azureId = azureSkill.id;
+                                        }
+                                    }
+                                    
+                                    return azureId ? `
+                                        <span class="detail-label">Azure AI Assistant ID:</span>
+                                        <span class="detail-value"><code>${azureId}</code></span>
+                                    ` : '';
+                                })()}
+                                <span class="detail-label">Version:</span>
+                                <span class="detail-value">${agentCard.version || 'N/A'}</span>
+                                <span class="detail-label">Input Modes:</span>
+                                <span class="detail-value">${agentCard.defaultInputModes ? agentCard.defaultInputModes.join(', ') : 'Unknown'}</span>
+                                <span class="detail-label">Output Modes:</span>
+                                <span class="detail-value">${agentCard.defaultOutputModes ? agentCard.defaultOutputModes.join(', ') : 'Unknown'}</span>
+                            </div>
+                            
+                            ${agentCard.capabilities ? `
+                                <div style="margin-top: 1rem;">
+                                    <span class="detail-label">Technical Capabilities:</span>
+                                    <div class="code-block">${JSON.stringify(agentCard.capabilities, null, 2)}</div>
+                                </div>
+                            ` : ''}
+                            
+                            ${agentCard.skills && agentCard.skills.length > 0 ? `
+                                <div style="margin-top: 1rem;">
+                                    <span class="detail-label">Agent Skills:</span>
+                                    <div class="code-block">
+                                        ${agentCard.skills.map(skill => `${skill.name}: ${skill.description}`).join('\n')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    modalContent += `
+                        <div class="detail-section">
+                            <h3 class="detail-title">
+                                <i class="fas fa-id-card"></i>
+                                A2A Agent Card
+                            </h3>
+                            <p style="color: #666; font-style: italic;">
+                                No detailed agent card available. The agent may not be responding to A2A protocol requests.
+                            </p>
+                        </div>
+                    `;
+                }
+
+                // Set the modal content and show it
+                document.getElementById('modalBody').innerHTML = modalContent;
+                document.getElementById('agentModal').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading agent details:', error);
+                alert(`Failed to load agent details for ${agentId}: ${error.message}`);
+            }
+        }
+
+        // Close the agent modal
+        function closeAgentModal() {
+            document.getElementById('agentModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('agentModal');
+            if (event.target === modal) {
+                closeAgentModal();
+            }
+        }
+
+        // Test agent connectivity
+        async function testAgent(agentId) {
+            alert(`Testing connectivity for ${agentId}...`);
+            // Refresh the agents list to get latest status
+            loadAgents();
+        }
+
+        // Refresh agents manually
+        function refreshAgents() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+            document.getElementById('agentsGrid').style.display = 'none';
+            loadAgents();
+        }
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        // ============= CHAT FUNCTIONALITY =============
+        
+        // Chat functionality (shared with claims dashboard)
+        let chatMessages = [];
+        let chatSessionId = null;
+        
+        // Initialize chat session ID
+        function initializeChatSession() {
+            chatSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // Open chat modal
+        function openChat() {
+            if (!chatSessionId) {
+                initializeChatSession();
+            }
+            document.getElementById('chatOverlay').classList.add('active');
+            document.getElementById('chatInput').focus();
+        }
+        
+        // Close chat modal
+        function closeChat() {
+            document.getElementById('chatOverlay').classList.remove('active');
+        }
+        
+        // Handle Enter key in chat input
+        function handleChatKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        // Auto-resize textarea
+        function setupChatInput() {
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                });
+            }
+        }
+        
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Clear input
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Add user message to chat
+            addMessageToChat('user', message);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Disable send button
+            const sendBtn = document.getElementById('chatSendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                // Send message to claims orchestrator
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        sessionId: chatSessionId,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add assistant response
+                if (data.response) {
+                    addMessageToChat('assistant', data.response);
+                } else {
+                    addMessageToChat('error', 'Sorry, I received an empty response. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Chat error:', error);
+                removeTypingIndicator();
+                
+                // Provide user-friendly error message
+                let errorMessage = 'Sorry, I encountered an error. Please try again.';
+                if (error.message.includes('fetch')) {
+                    errorMessage = 'Connection error: Please check if the Claims Orchestrator is running and try again.';
+                } else if (error.message.includes('HTTP')) {
+                    errorMessage = 'Server error: The service might be temporarily unavailable. Please try again in a moment.';
+                }
+                
+                addMessageToChat('error', errorMessage);
+            } finally {
+                // Re-enable send button with proper state restoration
+                sendBtn.disabled = false;
+                sendBtn.style.minWidth = '80px'; // Ensure minimum width
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+                
+                // Force re-render to prevent truncation
+                setTimeout(() => {
+                    if (sendBtn.innerHTML !== '<i class="fas fa-paper-plane"></i> Send') {
+                        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+                    }
+                }, 100);
+                
+                input.focus();
+            }
+        }
+        
+        // Add message to chat
+        function addMessageToChat(role, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = formatMessageContent(content);
+            
+            const timestampDiv = document.createElement('div');
+            timestampDiv.className = 'message-timestamp';
+            timestampDiv.textContent = new Date().toLocaleTimeString();
+            
+            messageDiv.appendChild(contentDiv);
+            messageDiv.appendChild(timestampDiv);
+            messagesContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Store message in history
+            chatMessages.push({
+                role: role,
+                content: content,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+        // Format message content (basic markdown support)
+        function formatMessageContent(content) {
+            return content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <span>Assistant is typing</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Initialize chat when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChatSession();
+            setupChatInput();
+            
+            // Ensure chat modal is properly initialized
+            const chatOverlay = document.getElementById('chatOverlay');
+            if (chatOverlay) {
+                // Make sure the modal is properly positioned
+                chatOverlay.style.display = 'none';
+                chatOverlay.style.position = 'fixed';
+                chatOverlay.style.zIndex = '10000';
+                
+                console.log('✅ Chat interface initialized');
+            } else {
+                console.error('❌ Chat overlay not found');
+            }
+            
+            // Close chat when clicking outside
+            chatOverlay?.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeChat();
+                }
+            });
+        });
+
+        // ============= END CHAT FUNCTIONALITY =============
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function () {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+    
+    <!-- Add Agent Modal -->
+    <div id="addAgentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-plus"></i>
+                    Add Custom Agent
+                </h2>
+                <button class="modal-close" onclick="closeAddAgentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="agentName">Agent Name</label>
+                    <input 
+                        type="text" 
+                        id="agentName" 
+                        class="form-control" 
+                        placeholder="Enter a custom name for this agent"
+                        onkeydown="handleAddAgentKeyDown(event)"
+                    >
+                    <small class="form-text">
+                        Give this agent a friendly name for easier identification.
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="agentUrl">Agent URL</label>
+                    <div class="input-with-button">
+                        <input 
+                            type="text" 
+                            id="agentUrl" 
+                            class="form-control" 
+                            placeholder="https://your-agent-url.com"
+                            onkeydown="handleAddAgentKeyDown(event)"
+                        >
+                        <button type="button" class="btn btn-secondary btn-small" onclick="testAgentUrl()" id="testUrlBtn">
+                            <i class="fas fa-vial"></i>
+                            Test
+                        </button>
+                    </div>
+                    <small class="form-text">
+                        Enter the URL of the agent. The system will try to fetch the agent card from 
+                        <code>/.well-known/agent.json</code> but will add the agent even if it's not available.
+                    </small>
+                </div>
+                
+                <div id="testResult" class="test-result" style="display: none;"></div>
+                
+                <div id="addAgentError" class="error-message" style="display: none;"></div>
+                <div id="addAgentSuccess" class="success-message" style="display: none;"></div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddAgentModal()">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addAgent()">
+                        <i class="fas fa-plus"></i>
+                        Add Agent
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Agent Modal -->
+    <div id="removeAgentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-trash-alt"></i>
+                    Remove Agent
+                </h2>
+                <button class="modal-close" onclick="closeRemoveAgentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="removeAgentSelect">Select Agent to Remove</label>
+                    <select id="removeAgentSelect" class="form-control">
+                        <option value="">Choose an agent...</option>
+                    </select>
+                    <small class="form-text">
+                        Only custom agents can be removed. Built-in agents are protected.
+                    </small>
+                </div>
+                
+                <div id="selectedAgentInfo" class="agent-info-preview" style="display: none;">
+                    <h4>Agent Information</h4>
+                    <div id="selectedAgentDetails"></div>
+                </div>
+                
+                <div id="removeAgentError" class="error-message" style="display: none;"></div>
+                <div id="removeAgentSuccess" class="success-message" style="display: none;"></div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeRemoveAgentModal()">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="removeAgent()" id="removeAgentBtn" disabled>
+                        <i class="fas fa-trash-alt"></i>
+                        Remove Agent
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Modal -->
+    <div id="chatOverlay" class="chat-overlay">
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <h3>
+                    <i class="fas fa-robot"></i>
+                    Claims Orchestrator Assistant
+                </h3>
+                <div class="connection-status">
+                    <div class="status-dot" id="chatStatusDot"></div>
+                    <span id="chatStatus">Connected</span>
+                </div>
+                <button class="chat-close" onclick="closeChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message system">
+                    <div class="message-content">
+                        👋 Hello! I'm your Claims Orchestrator Assistant. I can help you query claims data, check processing status, and answer questions about your insurance database. What would you like to know?
+                    </div>
+                    <div class="message-timestamp" id="systemMessageTime"></div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+                <div class="chat-input-container">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Ask me about claims, coverage, or any data in the system..."
+                        rows="1"
+                        onkeydown="handleChatKeyDown(event)"
+                    ></textarea>
+                    <button id="chatSendBtn" class="chat-send-btn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
